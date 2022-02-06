@@ -227,7 +227,7 @@ Transform:
   m_GameObject: {fileID: 494477437}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 14.917647, z: 1}
+  m_LocalScale: {x: 10.000001, y: 14.376418, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -299,7 +299,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.4588237
+  orthographic size: 7.188209
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -438,6 +438,7 @@ MonoBehaviour:
   RotationSpeed: 20
   MovementSpeedX: 2
   MovementSpeedY: 2
+  orderInLayer: 0
   Combos:
   - childrens:
     - {fileID: 21300000, guid: 10b0c1facefb20d46a74559e77a3f827, type: 3}
