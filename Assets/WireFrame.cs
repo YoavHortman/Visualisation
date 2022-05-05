@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class WireFrame : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    void OnPreRender()
     {
-        
+        GL.wireframe = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnPostRender()
     {
-        
+        GL.wireframe = false;
     }
 }

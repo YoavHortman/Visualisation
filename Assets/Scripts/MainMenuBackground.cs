@@ -30,6 +30,9 @@ public class MainMenuBackground : MonoBehaviour {
   private Color targetColor = new Color(1, 1, 1, 1);
   private float rangeStart = 0;
   private float rangeEnd = 10;
+  private Grid _grid;
+
+  private string pattern = "DEFAULT";
 
 
   [Serializable]
@@ -38,7 +41,6 @@ public class MainMenuBackground : MonoBehaviour {
   }
 
   [SerializeField] Childrens[] Combos;
-  // [SerializeField] private Sprite[][] combos;
 
   Tuple<Sprite, Vector2> getRandomSpriteWithMeteData() {
     if (overrideRandomWith != null) {
@@ -60,7 +62,10 @@ public class MainMenuBackground : MonoBehaviour {
   void Start() {
     instances = new SpriteRenderer[] { };
     mainCam = Camera.main;
+    _grid = GetComponent<Grid>();
+    UpdateGrid();
     InitSpritesWithMetaData();
+
     ResizeListener.onResize.AddListener(AfterResize);
     Invoke(nameof(UpdateTargetColor), getRandomInRange());
     Invoke(nameof(UpdateRange), 15);
@@ -69,9 +74,23 @@ public class MainMenuBackground : MonoBehaviour {
     Invoke(nameof(SetMode), getRandomInRange());
   }
 
+  void UpdateGrid() {
+    _grid.cellSize = new Vector3(spriteSize, spriteSize, 0);
+    _grid.cellGap = new Vector3(borderPadding, borderPadding, 0);
+    
+  }
+  [EditorButton]
   void UpdateSize() {
-    spriteSize = Random.Range(0.1f, 10f);
-    borderPadding = Random.Range(0f, 1f);
+    SetPattern();
+    if (pattern == "STEPS") {
+      spriteSize = Random.Range(0.1f, 1f);
+      borderPadding = spriteSize / 2;
+    } else {
+      spriteSize = Random.Range(0.1f, 10f);
+      borderPadding = Random.Range(0f, 1f);
+    }
+  
+    UpdateGrid();
     InitSpritesWithMetaData();
     Invoke(nameof(UpdateSize), getRandomInRange());
   }
@@ -134,6 +153,19 @@ public class MainMenuBackground : MonoBehaviour {
     Invoke(nameof(SetMode), getRandomInRange() * 2);
   }
 
+  void SetPattern() {
+    var random = Random.value;
+    if (random < 0.25f) {
+      pattern = "DEFAULT";
+    } else if (random < 0.5f) {
+      pattern = "ZIGZAG";
+    } else if (random < 0.75f) {
+      pattern = "DIAGONAL";
+    } else {
+      pattern = "STEPS";
+    }
+  }
+
   void ChangeColor() {
     color = Color.Lerp(color, targetColor, Time.deltaTime);
     foreach (var i in instances) {
@@ -147,6 +179,7 @@ public class MainMenuBackground : MonoBehaviour {
     nextColCount++;
     nextRowCount++;
 
+
     if (nextColCount != colCount || nextRowCount != rowCount) {
       colCount = nextColCount;
       rowCount = nextRowCount;
@@ -156,7 +189,7 @@ public class MainMenuBackground : MonoBehaviour {
 
     if (nextSize < instances.Length) {
       for (var i = nextSize; i < instances.Length; i++) {
-        Destroy(instances[i]);
+        Destroy(instances[i].gameObject);
       }
     }
 
@@ -182,8 +215,7 @@ public class MainMenuBackground : MonoBehaviour {
     var currRow = 0;
     foreach (var instance in newInstances) {
       ConfigSpriteRenderer(instance);
-      instance.transform.position =
-        new Vector3(currCol * fullSize + initialPos.x, currRow * fullSize + initialPos.y, 0);
+      instance.transform.position = new Vector3(currCol * fullSize + initialPos.x, currRow * fullSize + initialPos.y, 0);
       instance.transform.rotation = currentRotation;
       currCol = (currCol + 1) % colCount;
       if (currCol == 0) {
@@ -199,27 +231,158 @@ public class MainMenuBackground : MonoBehaviour {
     instance.size = spriteWithMeteData.Item2;
     instance.sortingOrder = orderInLayer;
   }
-
+int limiter = 0;
   void Update() {
     Transform t;
+    var colCounter = 0;
+    var rowCounter = 0;
     foreach (var instance in instances) {
       t = instance.transform;
+      if (colCounter == 0 && limiter % 60 == 0) {
+        Debug.Log(positionToCell(t.position));
+        limiter = 0;
+      }
+      limiter++;
       t.Rotate(Vector3.forward, RotationSpeed * Time.deltaTime);
       currentRotation = t.rotation;
+      if (pattern == "DEFAULT") {
+        DefaultPattern(t);
+      } else if (pattern == "ZIGZAG") {
+        ZigZagPattern(t);
+      } else if (pattern == "DIAGONAL") {
+       DiagonalPattern(t, colCounter, rowCounter);
+      } else if (pattern == "STEPS") {
+        StepsPattern(t);
+      }
+      colCounter++;
+      if (colCount == (colCounter / (rowCounter + 1))) {
+        rowCounter++;
+      }
+      handleInstanceBounds(t, instance);
+    }
+
+    void DefaultPattern(Transform t) {
       t.position += new Vector3(Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);
-      if (t.position.x > fullSize * colCount / 2) {
+    }
+
+    void DiagonalPattern(Transform t, int colCounter, int rowCounter) {
+      if (colCount % 2 == 0) {
+        if (colCounter % 2 == 0) {
+            t.position += new Vector3(Time.deltaTime * MovementSpeedX, -Time.deltaTime * MovementSpeedY, 0);  
+        } else {
+            t.position += new Vector3(Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);
+        }
+      } else {
+        if (rowCounter % 2 == 0) {
+            t.position += new Vector3(-Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);
+        } else {
+            t.position += new Vector3(Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);
+        }
+      }
+    }
+
+    void ZigZagPattern(Transform t) {
+      if (colCount % 2 == 0) {
+        if (_grid.WorldToCell(t.position).x % 2 == 0) {
+          t.position += new Vector3(Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);  
+        } else {
+          t.position += new Vector3(Time.deltaTime * MovementSpeedX, -Time.deltaTime * MovementSpeedY, 0);
+        }
+      } else {
+        if (_grid.WorldToCell(t.position).y % 2 == 0) {
+          t.position += new Vector3(Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);  
+        } else {
+          t.position += new Vector3(-Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);
+        }
+      }
+    }
+
+  // TODO has a minor issue where in certain sizes creates empty spots
+  void StepsPattern(Transform t) {
+    var cur = positionToCell(t.position);
+    int curRow = cur.y;
+    int curCol = cur.x;
+  
+    if (colCount % 2 == 0) {
+      if ((curRow + curCol) % 2 == 0) {
+        t.position += new Vector3(0, Time.deltaTime * MovementSpeedY, 0);  
+      } else {
+        t.position += new Vector3(Time.deltaTime * MovementSpeedY, 0, 0);  
+      }
+    } 
+    else {
+      if ((curRow + curCol) % 2 == 0) {
+        t.position += new Vector3(Time.deltaTime * MovementSpeedX, 0, 0);  
+      } else {
+        t.position += new Vector3(0, Time.deltaTime * MovementSpeedX, 0);  
+      }
+    }
+  }
+
+  void CircleJerk(Transform t) {
+    var cur = positionToCell(t.position);
+    int curRow = cur.y;
+    int curCol = cur.x;
+    if (curCol == -colCount / 2  && curRow != rowCount / 2) {
+      t.position += Vector3.up * Time.deltaTime * MovementSpeedY;
+    } else if (curCol == colCount / 2 && curRow != -rowCount / 2 ) {
+      t.position += Vector3.down * Time.deltaTime * MovementSpeedY;
+    } else if (curRow == -rowCount / 2  && curCol != -colCount / 2 ) {
+      t.position += Vector3.left * Time.deltaTime * MovementSpeedY;
+    } else if (curRow == rowCount / 2 && curCol != colCount / 2) {
+      t.position += Vector3.right * Time.deltaTime * MovementSpeedY;
+    } 
+
+    // Almost using grid    
+    // var cur = _grid.WorldToCell(t.position);
+    // int curRow = cur.y;
+    // int curCol = cur.x;
+    // if (curCol == -1 && curRow != rowCount -1) {
+    //   t.position += Vector3.up * Time.deltaTime * MovementSpeedY;
+    // } 
+    // if (curCol == colCount - 1 && curRow != -1) {
+    //   t.position += Vector3.down * Time.deltaTime * MovementSpeedY;
+    // } 
+    // if (curRow == -1 && curCol != -1) {
+    //   t.position += Vector3.left * Time.deltaTime * MovementSpeedY;
+    // } 
+    // if (curRow == rowCount - 1 && curCol != colCount - 1) {
+    //   t.position += Vector3.right * Time.deltaTime * MovementSpeedY;
+    // } 
+  }
+
+    void handleInstanceBounds(Transform t, SpriteRenderer instance) {
+      // var cur = _grid.WorldToCell(t.position);
+      // if (cur.x >= colCount) {
+      //   t.position = _grid.CellToWorld(new Vector3Int(-1, cur.y, 0));
+      // } else if (cur.x < -1) {
+      //   t.position = _grid.CellToWorld(new Vector3Int(colCount, cur.y, 0));
+      // }
+
+      // cur = _grid.WorldToCell(t.position);
+      // if (cur.y >= rowCount) {
+      //   t.position = _grid.CellToWorld(new Vector3Int(cur.x, -1, 0));
+      // } else if (cur.y < -1) {
+      //   t.position = _grid.CellToWorld(new Vector3Int(cur.x, rowCount, 0));
+      // }
+      
+      if (t.position.x >= fullSize * colCount / 2) {
         t.position -= new Vector3(fullSize * colCount, 0, 0);
         ConfigSpriteRenderer(instance);
-      } else if (t.position.y > fullSize * rowCount / 2) {
-        t.position -= new Vector3(spriteSize, fullSize * rowCount, 0);
+      } else if (t.position.y >= fullSize * rowCount / 2) {
+        t.position -= new Vector3(0, fullSize * rowCount, 0);
         ConfigSpriteRenderer(instance);
-      } else if (t.position.y < -fullSize * rowCount / 2) {
-        t.position += new Vector3(spriteSize, fullSize * rowCount, 0);
+      } else if (t.position.y <= -fullSize * rowCount / 2) {
+        t.position += new Vector3(0, fullSize * rowCount, 0);
         ConfigSpriteRenderer(instance);
-      } else if (t.position.x < -fullSize * colCount / 2) {
+      } else if (t.position.x <= -fullSize * colCount / 2) {
         t.position += new Vector3(fullSize * colCount, 0, 0);
         ConfigSpriteRenderer(instance);
       }
+    }
+
+    Vector3Int positionToCell(Vector3 pos) {
+      return new Vector3Int(Mathf.RoundToInt(pos.x / fullSize - fullSize / 2), Mathf.RoundToInt(pos.y / fullSize - fullSize / 2), 0);
     }
 
     ChangeColor();

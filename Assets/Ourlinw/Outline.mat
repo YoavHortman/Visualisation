@@ -38,9 +38,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _BOOLEAN: 0
-    - _OutlineThickness: 1
+    - _OutlineThickness: 0
     - _Scale: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 0}
-    - _OutlineColor: {r: 0.9339623, g: 0.22082132, b: 0.039649326, a: 1}
+    - _OutlineColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
   m_BuildTextureStacks: []
