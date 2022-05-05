@@ -18,7 +18,6 @@ public class MainMenuBackground : MonoBehaviour {
   [SerializeField] private float MovementSpeedX = -2;
   [SerializeField] private float MovementSpeedY = -2;
   [SerializeField] private int orderInLayer = 0;
-  private float fullSize;
   private Tuple<Sprite, Vector2>[] _spritesWithMetaData;
   private SpriteRenderer[] instances;
   private Camera mainCam;
@@ -79,12 +78,21 @@ public class MainMenuBackground : MonoBehaviour {
     _grid.cellGap = new Vector3(borderPadding, borderPadding, 0);
     
   }
+
+  float GetFullSize() {
+    return spriteSize + borderPadding;
+  }
+
   [EditorButton]
   void UpdateSize() {
     SetPattern();
     if (pattern == "STEPS") {
-      spriteSize = Random.Range(0.1f, 1f);
-      borderPadding = spriteSize / 2;
+      var rowCol = new Tuple<int, int>(1,1);
+      while (rowCol.Item1 % 2 != 0 || rowCol.Item2 % 2 != 0) {
+        spriteSize = Random.Range(0.1f, 1f);
+        borderPadding = spriteSize / 2;
+        rowCol = GetNextColAndRow(ResizeListener.screenSizeInWorldCoords);
+      }
     } else {
       spriteSize = Random.Range(0.1f, 10f);
       borderPadding = Random.Range(0f, 1f);
@@ -116,7 +124,6 @@ public class MainMenuBackground : MonoBehaviour {
   }
 
   void InitSpritesWithMetaData() {
-    fullSize = spriteSize + borderPadding;
     _spritesWithMetaData = new Tuple<Sprite, Vector2>[sprites.Length];
 
     for (var i = 0; i < _spritesWithMetaData.Length; i++) {
@@ -173,17 +180,19 @@ public class MainMenuBackground : MonoBehaviour {
     }
   }
 
-  void AfterResize(Vector2 screenSizeInWorldCoords) {
-    var nextColCount = Mathf.CeilToInt(screenSizeInWorldCoords.x * 2 / fullSize);
-    var nextRowCount = Mathf.CeilToInt(screenSizeInWorldCoords.y * 2 / fullSize);
+  Tuple<int, int> GetNextColAndRow(Vector2 screenSizeInWorldCoords) {
+    var nextColCount = Mathf.CeilToInt(screenSizeInWorldCoords.x * 2 / GetFullSize());
+    var nextRowCount = Mathf.CeilToInt(screenSizeInWorldCoords.y * 2 / GetFullSize());
     nextColCount++;
     nextRowCount++;
+    return new Tuple<int, int>(nextColCount, nextRowCount);
+  }
 
+  void AfterResize(Vector2 screenSizeInWorldCoords) {
+    var nextColRow = GetNextColAndRow(screenSizeInWorldCoords);
 
-    if (nextColCount != colCount || nextRowCount != rowCount) {
-      colCount = nextColCount;
-      rowCount = nextRowCount;
-    }
+    colCount = nextColRow.Item1;
+    rowCount = nextColRow.Item2;
 
     var nextSize = colCount * rowCount;
 
@@ -215,7 +224,7 @@ public class MainMenuBackground : MonoBehaviour {
     var currRow = 0;
     foreach (var instance in newInstances) {
       ConfigSpriteRenderer(instance);
-      instance.transform.position = new Vector3(currCol * fullSize + initialPos.x, currRow * fullSize + initialPos.y, 0);
+      instance.transform.position = new Vector3(currCol * GetFullSize() + initialPos.x, currRow * GetFullSize() + initialPos.y, 0);
       instance.transform.rotation = currentRotation;
       currCol = (currCol + 1) % colCount;
       if (currCol == 0) {
@@ -239,7 +248,6 @@ int limiter = 0;
     foreach (var instance in instances) {
       t = instance.transform;
       if (colCounter == 0 && limiter % 60 == 0) {
-        Debug.Log(positionToCell(t.position));
         limiter = 0;
       }
       limiter++;
@@ -258,7 +266,7 @@ int limiter = 0;
       if (colCount == (colCounter / (rowCounter + 1))) {
         rowCounter++;
       }
-      handleInstanceBounds(t, instance);
+      handleInstanceBounds(t, instance, GetFullSize());
     }
 
     void DefaultPattern(Transform t) {
@@ -297,30 +305,19 @@ int limiter = 0;
       }
     }
 
-  // TODO has a minor issue where in certain sizes creates empty spots
   void StepsPattern(Transform t) {
-    var cur = positionToCell(t.position);
+    var cur = _grid.WorldToCell(t.position);
     int curRow = cur.y;
-    int curCol = cur.x;
-  
-    if (colCount % 2 == 0) {
-      if ((curRow + curCol) % 2 == 0) {
-        t.position += new Vector3(0, Time.deltaTime * MovementSpeedY, 0);  
-      } else {
-        t.position += new Vector3(Time.deltaTime * MovementSpeedY, 0, 0);  
-      }
-    } 
-    else {
-      if ((curRow + curCol) % 2 == 0) {
-        t.position += new Vector3(Time.deltaTime * MovementSpeedX, 0, 0);  
-      } else {
-        t.position += new Vector3(0, Time.deltaTime * MovementSpeedX, 0);  
-      }
+    int curCol = cur.x;  
+    if ((curRow + curCol) % 2 == 0) {
+      t.position += new Vector3(0, Time.deltaTime * MovementSpeedY, 0);  
+    } else {
+      t.position += new Vector3(Time.deltaTime * MovementSpeedY, 0, 0);  
     }
   }
 
   void CircleJerk(Transform t) {
-    var cur = positionToCell(t.position);
+    var cur = _grid.WorldToCell(t.position);
     int curRow = cur.y;
     int curCol = cur.x;
     if (curCol == -colCount / 2  && curRow != rowCount / 2) {
@@ -351,7 +348,7 @@ int limiter = 0;
     // } 
   }
 
-    void handleInstanceBounds(Transform t, SpriteRenderer instance) {
+    void handleInstanceBounds(Transform t, SpriteRenderer instance, float fullSize) {
       // var cur = _grid.WorldToCell(t.position);
       // if (cur.x >= colCount) {
       //   t.position = _grid.CellToWorld(new Vector3Int(-1, cur.y, 0));
@@ -365,7 +362,6 @@ int limiter = 0;
       // } else if (cur.y < -1) {
       //   t.position = _grid.CellToWorld(new Vector3Int(cur.x, rowCount, 0));
       // }
-      
       if (t.position.x >= fullSize * colCount / 2) {
         t.position -= new Vector3(fullSize * colCount, 0, 0);
         ConfigSpriteRenderer(instance);
@@ -379,10 +375,6 @@ int limiter = 0;
         t.position += new Vector3(fullSize * colCount, 0, 0);
         ConfigSpriteRenderer(instance);
       }
-    }
-
-    Vector3Int positionToCell(Vector3 pos) {
-      return new Vector3Int(Mathf.RoundToInt(pos.x / fullSize - fullSize / 2), Mathf.RoundToInt(pos.y / fullSize - fullSize / 2), 0);
     }
 
     ChangeColor();
