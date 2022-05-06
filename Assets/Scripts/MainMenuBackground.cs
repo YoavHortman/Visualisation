@@ -10,10 +10,17 @@ struct SpriteWithMetedata {
   private Color colorData;
 }
 
+enum Patterns {
+  DEFAULT,
+  STEPS,
+  ZIGZAG,
+  DIAGONAL,
+  CIRCLE,
+}
+
 public class MainMenuBackground : MonoBehaviour {
   [SerializeField] private Sprite[] sprites = new Sprite[0];
   [SerializeField] private float spriteSize = 5f;
-  [SerializeField] private float borderPadding = 0.5f;
   [SerializeField] private float RotationSpeed = 20;
   [SerializeField] private float MovementSpeedX = -2;
   [SerializeField] private float MovementSpeedY = -2;
@@ -86,7 +93,7 @@ public class MainMenuBackground : MonoBehaviour {
   [EditorButton]
   void UpdateSize() {
     SetPattern();
-    if (pattern == "STEPS") {
+    if (pattern == Patterns.STEPS) {
       var rowCol = new Tuple<int, int>(1,1);
       while (rowCol.Item1 % 2 != 0 || rowCol.Item2 % 2 != 0) {
         spriteSize = Random.Range(0.1f, 1f);
@@ -95,7 +102,7 @@ public class MainMenuBackground : MonoBehaviour {
       }
     } else {
       spriteSize = Random.Range(0.1f, 10f);
-      borderPadding = Random.Range(0f, 1f);
+      borderPadding = Random.Range(0f, 0.3f);
     }
   
     UpdateGrid();
@@ -128,14 +135,8 @@ public class MainMenuBackground : MonoBehaviour {
 
     for (var i = 0; i < _spritesWithMetaData.Length; i++) {
       var sprite = sprites[i];
-      float aspectX = sprite.bounds.size.x / sprite.bounds.size.y;
-      float ySize = spriteSize;
-      while (aspectX > 1) {
-        aspectX /= 1.01f;
-        ySize /= 1.01f;
-      }
-
-      _spritesWithMetaData[i] = new Tuple<Sprite, Vector2>(sprite, new Vector2(spriteSize * aspectX, ySize));
+      float ratio = spriteSize / Mathf.Sqrt(sprite.bounds.size.x * sprite.bounds.size.x + sprite.bounds.size.y * sprite.bounds.size.y);
+      _spritesWithMetaData[i] = new Tuple<Sprite, Vector2>(sprite, new Vector2(sprite.bounds.size.x * ratio, sprite.bounds.size.y * ratio));
     }
 
     AfterResize(ResizeListener.screenSizeInWorldCoords);
@@ -144,14 +145,10 @@ public class MainMenuBackground : MonoBehaviour {
 
   void SetMode() {
     if (overrideRandomWith == null) {
-      if (Random.value > 0.7f && Combos.Length > 0) {
+      if (Random.value > 0.5f && Combos.Length > 0) {
         overrideRandomWith = Combos[Random.Range(0, Combos.Length)].childrens.ToArray();
       } else {
-        if (Random.value > 0.7f) {
-          overrideRandomWith = new[] {getRandomSpriteWithMeteData().Item1};
-        } else {
-          overrideRandomWith = new[] {getRandomSpriteWithMeteData().Item1, getRandomSpriteWithMeteData().Item1};
-        }
+        overrideRandomWith = new[] {getRandomSpriteWithMeteData().Item1};
       }
     } else {
       overrideRandomWith = null;
@@ -161,16 +158,8 @@ public class MainMenuBackground : MonoBehaviour {
   }
 
   void SetPattern() {
-    var random = Random.value;
-    if (random < 0.25f) {
-      pattern = "DEFAULT";
-    } else if (random < 0.5f) {
-      pattern = "ZIGZAG";
-    } else if (random < 0.75f) {
-      pattern = "DIAGONAL";
-    } else {
-      pattern = "STEPS";
-    }
+    var values = Enum.GetValues(typeof(Patterns));
+    pattern = (Patterns)values.GetValue(Random.Range(0, values.Length));
   }
 
   void ChangeColor() {
@@ -247,20 +236,32 @@ int limiter = 0;
     var rowCounter = 0;
     foreach (var instance in instances) {
       t = instance.transform;
+      
+      // For debugging this is convient
       if (colCounter == 0 && limiter % 60 == 0) {
         limiter = 0;
       }
       limiter++;
       t.Rotate(Vector3.forward, RotationSpeed * Time.deltaTime);
       currentRotation = t.rotation;
-      if (pattern == "DEFAULT") {
-        DefaultPattern(t);
-      } else if (pattern == "ZIGZAG") {
-        ZigZagPattern(t);
-      } else if (pattern == "DIAGONAL") {
-       DiagonalPattern(t, colCounter, rowCounter);
-      } else if (pattern == "STEPS") {
-        StepsPattern(t);
+      switch (pattern) {
+        case Patterns.DEFAULT:
+          DefaultPattern(t);
+          break;
+        case Patterns.ZIGZAG:
+          ZigZagPattern(t);
+          break;
+        case Patterns.DIAGONAL:
+          DiagonalPattern(t, colCounter, rowCounter);
+          break;
+        case Patterns.STEPS:
+          StepsPattern(t);
+          break;
+        case Patterns.CIRCLE:
+          CircleJerk(t);
+          break;
+        default:
+         throw new Exception("unhandled case");
       }
       colCounter++;
       if (colCount == (colCounter / (rowCounter + 1))) {
@@ -308,11 +309,19 @@ int limiter = 0;
   void StepsPattern(Transform t) {
     var cur = _grid.WorldToCell(t.position);
     int curRow = cur.y;
-    int curCol = cur.x;  
-    if ((curRow + curCol) % 2 == 0) {
-      t.position += new Vector3(0, Time.deltaTime * MovementSpeedY, 0);  
+    int curCol = cur.x;
+    if (spriteSize % 2 == 0) {
+      if ((curRow + curCol) % 2 == 0) {
+        t.position += new Vector3(Time.deltaTime * MovementSpeedY, 0, 0);  
+      } else {
+        t.position += new Vector3(0, Time.deltaTime * MovementSpeedY, 0);  
+      }
     } else {
-      t.position += new Vector3(Time.deltaTime * MovementSpeedY, 0, 0);  
+      if ((curRow + curCol) % 2 == 0) {
+        t.position -= new Vector3(Time.deltaTime * MovementSpeedY, 0, 0);
+      } else {
+        t.position -= new Vector3(0, Time.deltaTime * MovementSpeedY, 0);  
+      }
     }
   }
 
