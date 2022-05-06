@@ -25,6 +25,8 @@ public class MainMenuBackground : MonoBehaviour {
   [SerializeField] private float MovementSpeedX = -2;
   [SerializeField] private float MovementSpeedY = -2;
   [SerializeField] private int orderInLayer = 0;
+
+  private float borderPadding = 0f;
   private Tuple<Sprite, Vector2>[] _spritesWithMetaData;
   private SpriteRenderer[] instances;
   private Camera mainCam;
@@ -38,7 +40,7 @@ public class MainMenuBackground : MonoBehaviour {
   private float rangeEnd = 10;
   private Grid _grid;
 
-  private string pattern = "DEFAULT";
+  private Patterns pattern = Patterns.DEFAULT;
 
 
   [Serializable]
