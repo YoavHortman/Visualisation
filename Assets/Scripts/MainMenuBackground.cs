@@ -142,7 +142,7 @@ public class MainMenuBackground : MonoBehaviour {
   
     UpdateGrid();
     InitSpritesWithMetaData();
-    // Invoke(nameof(UpdateSize), getRandomInRange());
+    Invoke(nameof(UpdateSize), getRandomInRange());
   }
 
   [EditorButton]
@@ -150,7 +150,7 @@ public class MainMenuBackground : MonoBehaviour {
     RotationSpeed = Random.Range(-50f, 50f);
     MovementSpeedX = Random.Range(-2f, 2f);
     MovementSpeedY = Random.Range(-2f, 2f);
-    // Invoke(nameof(UpdateSpeedAndRotation), getRandomInRange());
+    Invoke(nameof(UpdateSpeedAndRotation), getRandomInRange());
   }
 
 
