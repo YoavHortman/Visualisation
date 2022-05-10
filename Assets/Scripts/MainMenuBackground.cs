@@ -35,6 +35,7 @@ enum Patterns {
   DIAGONAL,
   CIRCLE,
   SCATTER,
+  SNAKES,
 }
 
 public class MainMenuBackground : MonoBehaviour {
@@ -58,6 +59,8 @@ public class MainMenuBackground : MonoBehaviour {
   private float rangeStart = 0;
   private float rangeEnd = 10;
   private Grid _grid;
+  
+  private int seed = 0;
 
   private Patterns pattern = Patterns.DEFAULT;
 
@@ -127,6 +130,7 @@ public class MainMenuBackground : MonoBehaviour {
           borderPadding = Random.Range(0f, 0.3f);
           break;
         }
+        case Patterns.SNAKES:
         case Patterns.STEPS: {
           var rowCol = new Tuple<int, int>(1,1);
           while (rowCol.Item1 % 2 != 0 || rowCol.Item2 % 2 != 0) {
@@ -225,6 +229,7 @@ public class MainMenuBackground : MonoBehaviour {
         case Patterns.DEFAULT:
         case Patterns.DIAGONAL:
         case Patterns.ZIGZAG:
+        case Patterns.SNAKES:
         case Patterns.STEPS: {
           nextColCount++;
           nextRowCount++;
@@ -242,7 +247,7 @@ public class MainMenuBackground : MonoBehaviour {
 
   void AfterResize(Vector2 screenSizeInWorldCoords) {
     var nextColRow = GetNextColAndRow(screenSizeInWorldCoords);
-
+    seed = Random.Range(0, 10);
     colCount = nextColRow.Item1;
     rowCount = nextColRow.Item2;
 
@@ -320,6 +325,9 @@ public class MainMenuBackground : MonoBehaviour {
         case Patterns.SCATTER: 
           ScatterMove(t, instance);
           break;
+        case Patterns.SNAKES:
+          SnakesPattern(t, instance, colCounter);
+          break;
         default:
          throw new Exception("unhandled case");
       }
@@ -332,6 +340,7 @@ public class MainMenuBackground : MonoBehaviour {
         case Patterns.DEFAULT:
         case Patterns.DIAGONAL:
         case Patterns.ZIGZAG:
+        case Patterns.SNAKES:
         case Patterns.STEPS: {
           handleInstanceBounds(t, instance.spriteRenderer, GetFullSize());
           break;
@@ -348,6 +357,11 @@ public class MainMenuBackground : MonoBehaviour {
     if (pattern == Patterns.SCATTER) {
       ScatterEnd(instances);
     }
+    ChangeColor();
+    if (Input.anyKeyDown) {
+      Screen.fullScreen = !Screen.fullScreen;
+      AfterResize(ResizeListener.screenSizeInWorldCoords);
+    }
   }
 
     void DefaultPattern(Transform t) {
@@ -355,7 +369,7 @@ public class MainMenuBackground : MonoBehaviour {
     }
 
     void DiagonalPattern(Transform t, int colCounter, int rowCounter) {
-      if (colCount % 2 == 0) {
+      if (seed % 2 == 0) {
         if (colCounter % 2 == 0) {
             t.position += new Vector3(Time.deltaTime * MovementSpeedX, -Time.deltaTime * MovementSpeedY, 0);  
         } else {
@@ -371,7 +385,7 @@ public class MainMenuBackground : MonoBehaviour {
     }
 
     void ZigZagPattern(Transform t) {
-      if (colCount % 2 == 0) {
+      if (seed % 2 == 0) {
         if (_grid.WorldToCell(t.position).x % 2 == 0) {
           t.position += new Vector3(Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);  
         } else {
@@ -390,7 +404,7 @@ public class MainMenuBackground : MonoBehaviour {
     var cur = _grid.WorldToCell(t.position);
     int curRow = cur.y;
     int curCol = cur.x;
-    if (colCount % 2 == 0) {
+    if (seed % 2 == 0) {
       if ((curRow + curCol) % 2 == 0) {
         t.position += new Vector3(Time.deltaTime * MovementSpeedY, 0, 0);  
       } else {
@@ -469,7 +483,7 @@ public class MainMenuBackground : MonoBehaviour {
     }
   }
 
-  void InitScatter(Instance[] instances, int rowCount, int colCount) {
+  void InitScatter(Instance[] instances) {
     ArrayList allGridPositions = new ArrayList();
     for (var i = 0; i < colCount; i++) {
       for (var j = 0; j < rowCount; j++) {
@@ -491,7 +505,7 @@ public class MainMenuBackground : MonoBehaviour {
   }
 
   void ScatterMove(Transform t, Instance instance) {
-    if (colCount % 2 == 0) {
+    if (seed % 2 == 0) {
       t.position = Vector2.MoveTowards(t.position, instance.targetPos, Math.Abs(Time.deltaTime * MovementSpeedY * 3));
     } else {
       t.position = Vector2.Lerp(t.position, instance.targetPos, Math.Abs(Time.deltaTime * MovementSpeedY * 3));
@@ -504,7 +518,54 @@ public class MainMenuBackground : MonoBehaviour {
         return;
       }
     }
-    InitScatter(instances, rowCount,colCount);
+    InitScatter(instances);
+  }
+
+
+  void SnakesPattern(Transform t, Instance instance, int colCounter) {
+    var cur = _grid.WorldToCell(t.position);
+    int curRow = Math.Abs(cur.y);
+    int curCol = Math.Abs(cur.x);
+    float absSpeed = Mathf.Abs(MovementSpeedY);
+
+    if (instance.leaving) {
+      if (seed % 2 == 0) {
+        if (curCol % 2 == 0 && curRow % 2 == 0) {
+          t.position += Vector3.right * Time.deltaTime * absSpeed;
+        } 
+        if (curCol % 2 == 1 && curRow % 2 == 0) {
+          t.position += Vector3.up * Time.deltaTime * absSpeed;
+        }
+        if (curCol % 2 == 1 && curRow % 2 == 1) {
+          t.position += Vector3.left * Time.deltaTime * absSpeed;
+        }
+        if (curCol % 2 == 0 && curRow % 2 == 1) {
+          t.position += Vector3.up * Time.deltaTime * absSpeed;
+        }
+      } else {
+        if (curCol % 2 == 0 && curRow % 2 == 0) {
+          t.position += Vector3.left * Time.deltaTime * absSpeed;
+        } 
+        if (curCol % 2 == 1 && curRow % 2 == 0) {
+          t.position += Vector3.down * Time.deltaTime * absSpeed;
+        }
+        if (curCol % 2 == 1 && curRow % 2 == 1) {
+          t.position += Vector3.right * Time.deltaTime * absSpeed;
+        }
+        if (curCol % 2 == 0 && curRow % 2 == 1) {
+          t.position += Vector3.down * Time.deltaTime * absSpeed;
+        }
+      }
+      var newCell = _grid.WorldToCell(t.position);
+      if (newCell.x != cur.x || newCell.y != cur.y) {
+        instance.leaving = false;  
+      }
+    } else {
+      t.position = Vector2.MoveTowards(t.position, _grid.GetCellCenterWorld(cur), Time.deltaTime * absSpeed);
+      if (DidReach(t, _grid.GetCellCenterWorld(cur), Time.deltaTime * absSpeed)) {        
+        instance.leaving = true;
+      }
+    }
   }
 
     void handleInstanceBounds(Transform t, SpriteRenderer instance, float fullSize) {
@@ -534,12 +595,6 @@ public class MainMenuBackground : MonoBehaviour {
         t.position += new Vector3(fullSize * colCount, 0, 0);
         ConfigSpriteRenderer(instance);
       }
-
-    ChangeColor();
-    if (Input.anyKeyDown) {
-      Screen.fullScreen = !Screen.fullScreen;
-      AfterResize(ResizeListener.screenSizeInWorldCoords);
-    }
   }
 
   private void OnDisable() {
