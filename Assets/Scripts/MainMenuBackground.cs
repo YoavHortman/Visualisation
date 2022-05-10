@@ -119,7 +119,6 @@ public class MainMenuBackground : MonoBehaviour {
     SetPattern();
     switch (pattern) {
         case Patterns.DEFAULT:
-        case Patterns.DIAGONAL:
         case Patterns.ZIGZAG: {
           spriteSize = Random.Range(0.1f, 10f);
           borderPadding = Random.Range(0f, 0.3f);
@@ -130,18 +129,11 @@ public class MainMenuBackground : MonoBehaviour {
           borderPadding = Random.Range(0f, 0.3f);
           break;
         }
+        // TODO have it so CIRCLE can handle odd numbers.
+        case Patterns.CIRCLE:
         case Patterns.SNAKES:
+        case Patterns.DIAGONAL:
         case Patterns.STEPS: {
-          var rowCol = new Tuple<int, int>(1,1);
-          while (rowCol.Item1 % 2 != 0 || rowCol.Item2 % 2 != 0) {
-            spriteSize = Random.Range(0.1f, 1f);
-            borderPadding = spriteSize / 2;
-            rowCol = GetNextColAndRow(ResizeListener.screenSizeInWorldCoords);
-          }
-          break;
-        }
-        case Patterns.CIRCLE: {
-          // TODO have it so it can handle odd numbers.
           var rowCol = new Tuple<int, int>(1,1);
           while (rowCol.Item1 % 2 != 0 || rowCol.Item2 % 2 != 0) {
             spriteSize = Random.Range(0.1f, 1f);
