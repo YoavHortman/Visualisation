@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,28 +9,32 @@ class SpriteWithMetedata {
   public Sprite sprite;
   public Vector2 sizeData;
   public SpriteRenderer spriteRenderer; 
-  public SpriteWithMetedata(Sprite sprite, Vector2 sizeData, bool leaving) {
+  public SpriteWithMetedata(Sprite sprite, Vector2 sizeData) {
     this.sprite = sprite;
     this.sizeData = sizeData;
   }
 }
 
 class Instance {
+
+  // Indicates if currently leaving or entering a cell
   public bool leaving;
   public SpriteRenderer spriteRenderer;
 
-  public Instance(SpriteRenderer spriteRenderer, bool leaving) {
+  public Vector2 targetPos;
+
+  public Instance(SpriteRenderer spriteRenderer) {
     this.spriteRenderer = spriteRenderer;
-    this.leaving = leaving;
+    this.leaving = true;
   }
 }
-
 enum Patterns {
   DEFAULT,
   STEPS,
   ZIGZAG,
   DIAGONAL,
   CIRCLE,
+  SCATTER,
 }
 
 public class MainMenuBackground : MonoBehaviour {
@@ -117,6 +122,11 @@ public class MainMenuBackground : MonoBehaviour {
           borderPadding = Random.Range(0f, 0.3f);
           break;
         }
+        case Patterns.SCATTER: {
+          spriteSize = Random.Range(0.1f, 1f);
+          borderPadding = Random.Range(0f, 0.3f);
+          break;
+        }
         case Patterns.STEPS: {
           var rowCol = new Tuple<int, int>(1,1);
           while (rowCol.Item1 % 2 != 0 || rowCol.Item2 % 2 != 0) {
@@ -142,6 +152,9 @@ public class MainMenuBackground : MonoBehaviour {
   
     UpdateGrid();
     InitSpritesWithMetaData();
+    if (pattern == Patterns.SCATTER) {
+      ResetScatter(instances);
+    }
     Invoke(nameof(UpdateSize), getRandomInRange());
   }
 
@@ -172,7 +185,7 @@ public class MainMenuBackground : MonoBehaviour {
     for (var i = 0; i < _spritesWithMetaData.Length; i++) {
       var sprite = sprites[i];
       float ratio = spriteSize / Mathf.Sqrt(sprite.bounds.size.x * sprite.bounds.size.x + sprite.bounds.size.y * sprite.bounds.size.y);
-      _spritesWithMetaData[i] = new SpriteWithMetedata(sprite, new Vector2(sprite.bounds.size.x * ratio, sprite.bounds.size.y * ratio), true);
+      _spritesWithMetaData[i] = new SpriteWithMetedata(sprite, new Vector2(sprite.bounds.size.x * ratio, sprite.bounds.size.y * ratio));
     }
 
     AfterResize(ResizeListener.screenSizeInWorldCoords);
@@ -217,6 +230,7 @@ public class MainMenuBackground : MonoBehaviour {
           nextRowCount++;
           break;
         }
+        case Patterns.SCATTER:
         case Patterns.CIRCLE: {
           break;
         }
@@ -246,7 +260,7 @@ public class MainMenuBackground : MonoBehaviour {
         var sr = instances[i].spriteRenderer.GetComponent<SpriteRenderer>();
         sr.size = getMetadata(sr.sprite).sizeData;
       } else {
-        newInstances[i] = new Instance(new GameObject("Sprite" + i).AddComponent<SpriteRenderer>(), false);
+        newInstances[i] = new Instance(new GameObject("Sprite" + i).AddComponent<SpriteRenderer>());
         newInstances[i].spriteRenderer.transform.parent = transform;
         newInstances[i].spriteRenderer.color = color;
       }
@@ -303,6 +317,9 @@ public class MainMenuBackground : MonoBehaviour {
         case Patterns.CIRCLE:
           Circle(t, instance);
           break;
+        case Patterns.SCATTER: 
+          ScatterMove(t, instance);
+          break;
         default:
          throw new Exception("unhandled case");
       }
@@ -319,6 +336,7 @@ public class MainMenuBackground : MonoBehaviour {
           handleInstanceBounds(t, instance.spriteRenderer, GetFullSize());
           break;
         }
+        case Patterns.SCATTER:
         case Patterns.CIRCLE: {
           break;
         }
@@ -326,6 +344,11 @@ public class MainMenuBackground : MonoBehaviour {
           throw new Exception("unhandled switch case");
       }
     }
+
+    if (pattern == Patterns.SCATTER) {
+      ScatterEnd(instances);
+    }
+  }
 
     void DefaultPattern(Transform t) {
       t.position += new Vector3(Time.deltaTime * MovementSpeedX, Time.deltaTime * MovementSpeedY, 0);
@@ -367,7 +390,7 @@ public class MainMenuBackground : MonoBehaviour {
     var cur = _grid.WorldToCell(t.position);
     int curRow = cur.y;
     int curCol = cur.x;
-    if (spriteSize % 2 == 0) {
+    if (colCount % 2 == 0) {
       if ((curRow + curCol) % 2 == 0) {
         t.position += new Vector3(Time.deltaTime * MovementSpeedY, 0, 0);  
       } else {
@@ -440,10 +463,48 @@ public class MainMenuBackground : MonoBehaviour {
       }
     } else {
       t.position = Vector2.MoveTowards(t.position, _grid.GetCellCenterWorld(cur), Time.deltaTime * absSpeed);
-      if (Vector2.Distance(t.position, _grid.GetCellCenterWorld(cur)) < Time.deltaTime * absSpeed) {
+      if (DidReach(t, _grid.GetCellCenterWorld(cur), Time.deltaTime * absSpeed)) {        
         instance.leaving = true;
       }
     }
+  }
+
+  void InitScatter(Instance[] instances, int rowCount, int colCount) {
+    ArrayList allGridPositions = new ArrayList();
+    for (var i = 0; i < colCount; i++) {
+      for (var j = 0; j < rowCount; j++) {
+        allGridPositions.Add(new Vector3Int(i, j, 0));
+      }
+    }
+    for (var i = 0; i < rowCount * colCount; i++) {
+      var instance = instances[i];
+      Vector3Int pos = (Vector3Int)allGridPositions[Random.Range(0, allGridPositions.Count)];
+      instance.targetPos = _grid.GetCellCenterWorld(pos);
+      allGridPositions.Remove(pos);
+    }
+  }
+
+  void ResetScatter(Instance[] instances) {
+    foreach (var i in instances) { 
+      i.targetPos = new Vector2();
+    }
+  }
+
+  void ScatterMove(Transform t, Instance instance) {
+    if (colCount % 2 == 0) {
+      t.position = Vector2.MoveTowards(t.position, instance.targetPos, Math.Abs(Time.deltaTime * MovementSpeedY * 3));
+    } else {
+      t.position = Vector2.Lerp(t.position, instance.targetPos, Math.Abs(Time.deltaTime * MovementSpeedY * 3));
+    }
+  }
+
+  void ScatterEnd(Instance[] instances) {
+    foreach (var instance in instances) {
+      if (!DidReach(instance.spriteRenderer.transform, instance.targetPos, Time.deltaTime * 10)) {
+        return;
+      }
+    }
+    InitScatter(instances, rowCount,colCount);
   }
 
     void handleInstanceBounds(Transform t, SpriteRenderer instance, float fullSize) {
@@ -473,7 +534,6 @@ public class MainMenuBackground : MonoBehaviour {
         t.position += new Vector3(fullSize * colCount, 0, 0);
         ConfigSpriteRenderer(instance);
       }
-    }
 
     ChangeColor();
     if (Input.anyKeyDown) {
@@ -484,5 +544,9 @@ public class MainMenuBackground : MonoBehaviour {
 
   private void OnDisable() {
     ResizeListener.onResize.AddListener(AfterResize);
+  }
+
+  bool DidReach(Transform t, Vector2 target, float minDistance) {
+    return Vector2.Distance(t.position, target) < minDistance;
   }
 }
