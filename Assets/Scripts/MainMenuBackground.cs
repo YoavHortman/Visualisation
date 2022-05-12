@@ -36,6 +36,9 @@ enum Patterns {
   CIRCLE,
   SCATTER,
   SNAKES,
+  EXPLODE,
+  SHAKE,
+  CIRCLES,
 }
 
 public class MainMenuBackground : MonoBehaviour {
@@ -124,6 +127,9 @@ public class MainMenuBackground : MonoBehaviour {
           borderPadding = Random.Range(0f, 0.3f);
           break;
         }
+        case Patterns.CIRCLES:
+        case Patterns.SHAKE:
+        case Patterns.EXPLODE:
         case Patterns.SCATTER: {
           spriteSize = Random.Range(0.1f, 1f);
           borderPadding = Random.Range(0f, 0.3f);
@@ -148,9 +154,32 @@ public class MainMenuBackground : MonoBehaviour {
   
     UpdateGrid();
     InitSpritesWithMetaData();
-    if (pattern == Patterns.SCATTER) {
-      ResetScatter(instances);
-    }
+
+    switch (pattern) {
+      case Patterns.CIRCLES:
+      case Patterns.DEFAULT:
+      case Patterns.ZIGZAG: 
+      case Patterns.CIRCLE:
+      case Patterns.SNAKES:
+      case Patterns.DIAGONAL:
+      case Patterns.STEPS: {
+        break;
+      }
+      case Patterns.SHAKE: {
+        SetRandomTargetsInRadius(instances, 0);
+        break;
+      }
+      case Patterns.EXPLODE: {
+        ResetTargetPosTo(instances, Vector2.zero);
+        break;
+      }
+      case Patterns.SCATTER: {
+        SetRandomTargetsOnGrid(instances);
+        break;
+      }
+      default:
+        throw new Exception("unhandled switch case");
+    }    
     Invoke(nameof(UpdateSize), getRandomInRange());
   }
 
@@ -227,6 +256,9 @@ public class MainMenuBackground : MonoBehaviour {
           nextRowCount++;
           break;
         }
+        case Patterns.CIRCLES:
+        case Patterns.SHAKE:
+        case Patterns.EXPLODE:
         case Patterns.SCATTER:
         case Patterns.CIRCLE: {
           break;
@@ -293,6 +325,7 @@ public class MainMenuBackground : MonoBehaviour {
     Transform t;
     var colCounter = 0;
     var rowCounter = 0;
+    var index = 0;
     foreach (var instance in instances) {
       t = instance.spriteRenderer.transform;
 
@@ -314,19 +347,30 @@ public class MainMenuBackground : MonoBehaviour {
         case Patterns.CIRCLE:
           Circle(t, instance);
           break;
+        case Patterns.EXPLODE:
+          ExplodeMove(t, instance, rowCounter, colCounter);
+          break;
         case Patterns.SCATTER: 
           ScatterMove(t, instance);
           break;
         case Patterns.SNAKES:
-          SnakesPattern(t, instance, colCounter);
+          SnakesPattern(t, instance);
+          break;
+        case Patterns.SHAKE:
+          ShakeMove(t, instance, rowCounter, colCounter);
+          break;
+        case Patterns.CIRCLES:
+          CirclesMove(t, instance, colCounter, rowCounter, index);
           break;
         default:
          throw new Exception("unhandled case");
       }
 
       colCounter++;
-      if (colCount == (colCounter / (rowCounter + 1))) {
+      index++;
+      if (colCounter == colCount) {
         rowCounter++;
+        colCounter = 0;
       }
       switch (pattern) {
         case Patterns.DEFAULT:
@@ -337,6 +381,9 @@ public class MainMenuBackground : MonoBehaviour {
           handleInstanceBounds(t, instance.spriteRenderer, GetFullSize());
           break;
         }
+        case Patterns.CIRCLES:
+        case Patterns.SHAKE:
+        case Patterns.EXPLODE:
         case Patterns.SCATTER:
         case Patterns.CIRCLE: {
           break;
@@ -346,9 +393,29 @@ public class MainMenuBackground : MonoBehaviour {
       }
     }
 
-    if (pattern == Patterns.SCATTER) {
-      ScatterEnd(instances);
+
+    switch (pattern) {
+      case Patterns.DEFAULT:
+      case Patterns.ZIGZAG:
+      case Patterns.DIAGONAL:
+      case Patterns.STEPS:
+      case Patterns.CIRCLE:
+      case Patterns.SNAKES:
+      case Patterns.SHAKE:
+        break;
+      case Patterns.SCATTER: 
+        ScatterEnd(instances);
+        break;
+      case Patterns.EXPLODE:
+        ExplodeEnd(instances);
+        break;      
+      case Patterns.CIRCLES:
+        CirclesEnd();
+        break;
+      default:
+        throw new Exception("unhandled case");
     }
+
     ChangeColor();
     if (Input.anyKeyDown) {
       Screen.fullScreen = !Screen.fullScreen;
@@ -421,13 +488,6 @@ public class MainMenuBackground : MonoBehaviour {
     int dFromTop = rowCount - curRow - 1;
     int dFromBottom = curRow;
 
-
-    int middleRow = rowCount / 2;
-    
-    // if (dFromTop == dFromBottom && dFromRight == dFromLeft) {
-    //   return;
-    // }§
-
     int col = Math.Min(dFromLeft, dFromRight);
     int row = Math.Min(dFromTop, dFromBottom);
     int n = Math.Min(col, row);
@@ -475,33 +535,64 @@ public class MainMenuBackground : MonoBehaviour {
     }
   }
 
-  void InitScatter(Instance[] instances) {
+  void SetRandomTargetsOnGrid(Instance[] instances) {
     ArrayList allGridPositions = new ArrayList();
     for (var i = 0; i < colCount; i++) {
       for (var j = 0; j < rowCount; j++) {
         allGridPositions.Add(new Vector3Int(i, j, 0));
       }
     }
-    for (var i = 0; i < rowCount * colCount; i++) {
-      var instance = instances[i];
+    foreach (var instance in instances) {
       Vector3Int pos = (Vector3Int)allGridPositions[Random.Range(0, allGridPositions.Count)];
       instance.targetPos = _grid.GetCellCenterWorld(pos);
       allGridPositions.Remove(pos);
     }
   }
 
-  void ResetScatter(Instance[] instances) {
+  void SetRandomTargetsInRadius(Instance[] instances, float radius) {
+    foreach (var instance in instances) {
+      instance.targetPos = instance.spriteRenderer.transform.position + new Vector3(Random.Range(-radius, radius), Random.Range(-radius, radius), 0);
+    }
+  }
+
+  void ResetTargetPosTo(Instance[] instances, Vector2 to) {
     foreach (var i in instances) { 
-      i.targetPos = new Vector2();
+      i.targetPos = to;
     }
   }
 
   void ScatterMove(Transform t, Instance instance) {
-    if (seed % 2 == 0) {
-      t.position = Vector2.MoveTowards(t.position, instance.targetPos, Math.Abs(Time.deltaTime * MovementSpeedY * 3));
-    } else {
-      t.position = Vector2.Lerp(t.position, instance.targetPos, Math.Abs(Time.deltaTime * MovementSpeedY * 3));
-    }
+    t.position = Vector2.Lerp(t.position, instance.targetPos, Math.Abs(Time.deltaTime * MovementSpeedY * 3));
+  }
+
+  void ExplodeMove(Transform t, Instance instance, int rowCounter, int colCounter) {
+    t.position = Vector2.MoveTowards(t.position, instance.targetPos, Math.Abs(Time.deltaTime * MovementSpeedY * 3));    
+  }
+
+  void ShakeMove(Transform t, Instance instance, int curRow, int curCol) {
+    if (DidReach(instance.spriteRenderer.transform, instance.targetPos, Time.deltaTime * 10)) {
+        if (!instance.leaving) {
+          instance.targetPos = _grid.GetCellCenterWorld(new Vector3Int(curCol, curRow, 0));
+        } else {
+          instance.targetPos = instance.spriteRenderer.transform.position + new Vector3(Random.Range(-GetFullSize() / 2, GetFullSize() / 2), Random.Range(-GetFullSize() / 2, GetFullSize() / 2), 0);
+        }
+        instance.leaving = !instance.leaving;
+      }
+    t.position = Vector2.MoveTowards(t.position, instance.targetPos, Mathf.Abs(Time.deltaTime * MovementSpeedY * 3));
+  }
+
+  void CirclesMove(Transform t, Instance instance, int colCounter, int rowCounter, int index) {
+    var r = GetFullSize() / 4;
+    var x = r * Mathf.Cos(angle + index);
+    var y = r * Mathf.Sin(angle + index);
+    var center = _grid.GetCellCenterWorld(new Vector3Int(colCounter, rowCounter, 0));
+    t.position = center + new Vector3(x, y, 0);
+  }
+
+  float angle = 0;
+  void CirclesEnd() {
+    var angleInc = MovementSpeedY * Time.deltaTime * 5;
+    angle += angleInc;
   }
 
   void ScatterEnd(Instance[] instances) {
@@ -510,11 +601,26 @@ public class MainMenuBackground : MonoBehaviour {
         return;
       }
     }
-    InitScatter(instances);
+    SetRandomTargetsOnGrid(instances);
+  }
+
+  bool explosionStarting = false;
+  void ExplodeEnd(Instance[] instances) {
+    foreach (var instance in instances) {
+      if (!DidReach(instance.spriteRenderer.transform, instance.targetPos, Time.deltaTime * 10)) {
+        return;
+      }
+    }
+    if (!explosionStarting) {
+      SetRandomTargetsOnGrid(instances);
+    } else {
+      ResetTargetPosTo(instances, instances[Random.Range(0, instances.Length)].spriteRenderer.transform.position);
+    }
+    explosionStarting = !explosionStarting;
   }
 
 
-  void SnakesPattern(Transform t, Instance instance, int colCounter) {
+  void SnakesPattern(Transform t, Instance instance) {
     var cur = _grid.WorldToCell(t.position);
     int curRow = Math.Abs(cur.y);
     int curCol = Math.Abs(cur.x);
