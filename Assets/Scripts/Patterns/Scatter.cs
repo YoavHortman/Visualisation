@@ -7,7 +7,7 @@ public class Scatter : BasePattern {
 
   public override void AfterUpdate(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
     foreach (var instance in instances) {
-      if (!PatternUtils.DidReach(instance.spriteRenderer.transform, instance.targetPos, Time.deltaTime * 10)) {
+      if (!PatternUtils.DidReach(instance.spriteRenderer.transform, instance.targetPos, Time.deltaTime)) {
         return;
       }
     }

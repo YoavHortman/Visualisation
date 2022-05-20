@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,18 +18,31 @@ public struct Sizes {
   }
 }
 public static class PatternUtils {
-  public static BasePattern[] allPatterns = {
-    new Circle(),
-    new Circles(),
-    new Default(),
-    new Diagonal(),
-    new Explode(),
-    new Scatter(),
-    new Shake(),
-    new Snakes(),
-    new Steps(),
-    new Zigzag(),
+  public static IDictionary<string, BasePattern> allPatterns = new Dictionary<string, BasePattern> {
+    {"circle", new Circle() },
+    { "circles", new Circles() },
+    { "default", new Default() },
+    { "diagonal", new Diagonal() },
+    { "explode", new Explode() },
+    { "scatter", new Scatter() },
+    { "shake", new Shake() },
+    { "snakes", new Snakes() },
+    { "steps", new Steps() },
+    { "zigzag", new Zigzag() },
   };
+  
+  // public static BasePattern[] allPatterns = {
+  //   new Circle(),
+  //   new Circles(),
+  //   new Default(),
+  //   new Diagonal(),
+  //   new Explode(),
+  //   new Scatter(),
+  //   new Shake(),
+  //   new Snakes(),
+  //   new Steps(),
+  //   new Zigzag(),
+  // };
 
   public static void SetRandomTargetsInRadius(Instance[] instances, float radius) {
     foreach (var instance in instances) {
@@ -62,6 +77,6 @@ public static class PatternUtils {
   }
 
   public static BasePattern GetRandomPattern() {
-    return allPatterns[Random.Range(0, allPatterns.Length)];
+    return allPatterns.ElementAt(Random.Range(0, allPatterns.Count)).Value;
   }
 }
