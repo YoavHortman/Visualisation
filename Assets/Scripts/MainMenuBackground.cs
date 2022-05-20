@@ -4,10 +4,9 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-internal class SpriteWithMetadata {
+public class SpriteWithMetadata {
   public readonly Sprite sprite;
   public Vector2 sizeData;
-  public SpriteRenderer spriteRenderer;
 
   public SpriteWithMetadata(Sprite sprite, Vector2 sizeData) {
     this.sprite = sprite;
@@ -20,10 +19,20 @@ public class Instance {
   public bool leaving;
   public readonly SpriteRenderer spriteRenderer;
   public Vector2 targetPos;
+  public SpriteWithMetadata spriteWithMetadata;
 
-  public Instance(SpriteRenderer spriteRenderer) {
+  public Instance(SpriteRenderer spriteRenderer, SpriteWithMetadata spw, int orderInLayer) {
     this.spriteRenderer = spriteRenderer;
+    ConfigSpriteWithMetadata(spw, orderInLayer);
     leaving = true;
+  }
+
+  public void ConfigSpriteWithMetadata(SpriteWithMetadata spw, int orderInLayer) {
+    spriteWithMetadata = spw;
+    spriteRenderer.drawMode = SpriteDrawMode.Sliced;
+    spriteRenderer.sortingOrder = orderInLayer;
+    spriteRenderer.sprite = spriteWithMetadata.sprite;
+    spriteRenderer.size = spriteWithMetadata.sizeData;
   }
 }
 
@@ -103,6 +112,16 @@ class MainMenuBackground : MonoBehaviour {
   }
 
   [EditorButton]
+  void UpdateSizeEditor() {
+    SetPattern();
+    _sizes = pattern.GetSizes();
+
+    UpdateGrid();
+    InitSpritesWithMetaData();
+
+    pattern.AfterSizeUpdate(_instances, _colRow, _grid);
+  }
+
   void UpdateSize() {
     SetPattern();
     _sizes = pattern.GetSizes();
@@ -195,12 +214,14 @@ class MainMenuBackground : MonoBehaviour {
     var newInstances = new Instance[nextSize];
     for (var i = 0; i < newInstances.Length; i++) {
       if (_instances.Length > i) {
+        _instances[i].ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
         newInstances[i] = _instances[i];
         var sr = _instances[i].spriteRenderer.GetComponent<SpriteRenderer>();
-        sr.size = getMetadata(sr.sprite).sizeData;
+        sr.size = _instances[i].spriteWithMetadata.sizeData;
       }
       else {
-        newInstances[i] = new Instance(new GameObject("Sprite" + i).AddComponent<SpriteRenderer>());
+        newInstances[i] = new Instance(new GameObject("Sprite" + i).AddComponent<SpriteRenderer>(),
+          getRandomSpriteWithMeteData(), orderInLayer);
         newInstances[i].spriteRenderer.transform.parent = transform;
         newInstances[i].spriteRenderer.color = _color;
       }
@@ -216,7 +237,6 @@ class MainMenuBackground : MonoBehaviour {
     var currCol = 0;
     var currRow = 0;
     foreach (var instance in newInstances) {
-      ConfigSpriteRenderer(instance.spriteRenderer);
       instance.spriteRenderer.transform.position = new Vector3(
         currCol * GetFullSize() + GetFullSize() / 2 + initialPos.x,
         currRow * GetFullSize() + GetFullSize() / 2 + initialPos.y, 0);
@@ -226,14 +246,6 @@ class MainMenuBackground : MonoBehaviour {
         currRow = (currRow + 1) % _colRow.y;
       }
     }
-  }
-
-  void ConfigSpriteRenderer(SpriteRenderer instance) {
-    instance.drawMode = SpriteDrawMode.Sliced;
-    var spriteWithMeteData = getRandomSpriteWithMeteData();
-    instance.sprite = spriteWithMeteData.sprite;
-    instance.size = spriteWithMeteData.sizeData;
-    instance.sortingOrder = orderInLayer;
   }
 
   void Update() {
@@ -248,7 +260,7 @@ class MainMenuBackground : MonoBehaviour {
       _currentRotation = t.rotation;
       pattern.Update(t, instance, curCol, curRow, index, GetFullSize(), _grid, _colRow, movementSpeed);
       if (pattern.GetShouldHandleInstanceBounds()) {
-        handleInstanceBounds(t, instance.spriteRenderer, GetFullSize());
+        handleInstanceBounds(t, instance, GetFullSize());
       }
 
       curCol++;
@@ -258,8 +270,8 @@ class MainMenuBackground : MonoBehaviour {
         curCol = 0;
       }
     }
-
     pattern.AfterUpdate(_instances, _grid, _colRow, movementSpeed);
+
 
     ChangeColor();
     if (Input.anyKeyDown) {
@@ -268,7 +280,7 @@ class MainMenuBackground : MonoBehaviour {
     }
   }
 
-  public void handleInstanceBounds(Transform t, SpriteRenderer instance, float fullSize) {
+  public void handleInstanceBounds(Transform t, Instance instance, float fullSize) {
     // var cur = _grid.WorldToCell(t.position);
     // if (cur.x >= colCount) {
     //   t.position = _grid.CellToWorld(new Vector3Int(-1, cur.y, 0));
@@ -284,19 +296,19 @@ class MainMenuBackground : MonoBehaviour {
     // }
     if (t.position.x >= fullSize * _colRow.x / 2) {
       t.position -= new Vector3(fullSize * _colRow.x, 0, 0);
-      ConfigSpriteRenderer(instance);
+      instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
     }
     else if (t.position.y >= fullSize * _colRow.y / 2) {
       t.position -= new Vector3(0, fullSize * _colRow.y, 0);
-      ConfigSpriteRenderer(instance);
+      instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
     }
     else if (t.position.y <= -fullSize * _colRow.y / 2) {
       t.position += new Vector3(0, fullSize * _colRow.y, 0);
-      ConfigSpriteRenderer(instance);
+      instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
     }
     else if (t.position.x <= -fullSize * _colRow.x / 2) {
       t.position += new Vector3(fullSize * _colRow.x, 0, 0);
-      ConfigSpriteRenderer(instance);
+      instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
     }
   }
 
