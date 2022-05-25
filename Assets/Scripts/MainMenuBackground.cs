@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class SpriteWithMetadata {
   public readonly Sprite sprite;
@@ -43,6 +46,7 @@ class MainMenuBackground : MonoBehaviour {
   [SerializeField] protected int orderInLayer = 0;
 
   private Sizes _sizes;
+  private Sizes _targetSizes;
   private SpriteWithMetadata[] _spritesWithMetaData;
   private Instance[] _instances;
   private Camera _mainCam;
@@ -59,7 +63,6 @@ class MainMenuBackground : MonoBehaviour {
 
   public static int seed;
 
-  // private Patterns pattern = Patterns.Spiral;
   private BasePattern pattern;
 
   [Serializable]
@@ -117,7 +120,7 @@ class MainMenuBackground : MonoBehaviour {
     _sizes = pattern.GetSizes();
 
     UpdateGrid();
-    InitSpritesWithMetaData();
+    UpdateSwm();
 
     pattern.AfterSizeUpdate(_instances, _colRow, _grid);
   }
@@ -127,7 +130,7 @@ class MainMenuBackground : MonoBehaviour {
     _sizes = pattern.GetSizes();
 
     UpdateGrid();
-    InitSpritesWithMetaData();
+    UpdateSwm();
 
     pattern.AfterSizeUpdate(_instances, _colRow, _grid);
     Invoke(nameof(UpdateSize), getRandomInRange());
@@ -138,6 +141,8 @@ class MainMenuBackground : MonoBehaviour {
     rotationSpeed = Random.Range(-50f, 50f);
     movementSpeed = new Vector2(Random.Range(-2f, 2f), Random.Range(-2f, 2f));
     Invoke(nameof(UpdateSpeedAndRotation), getRandomInRange());
+    // rotationSpeed = 0;
+    // movementSpeed = Vector2.zero;
   }
 
 
@@ -168,6 +173,16 @@ class MainMenuBackground : MonoBehaviour {
     AfterResize(ResizeListener.screenSizeInWorldCoords);
   }
 
+  private void UpdateSwm() {
+    for (var i = 0; i < _spritesWithMetaData.Length; i++) {
+      var sprite = sprites[i];
+      var ratio = _sizes.spriteSize /
+                  Mathf.Sqrt(
+                    sprite.bounds.size.x * sprite.bounds.size.x + sprite.bounds.size.y * sprite.bounds.size.y);
+      _spritesWithMetaData[i].sizeData = new Vector2(sprite.bounds.size.x * ratio, sprite.bounds.size.y * ratio);
+    }
+  }
+
 
   void SetMode() {
     if (_overrideRandomWith == null) {
@@ -175,7 +190,7 @@ class MainMenuBackground : MonoBehaviour {
         _overrideRandomWith = Combos[Random.Range(0, Combos.Length)].childrens.ToArray();
       }
       else {
-        _overrideRandomWith = new[] {getRandomSpriteWithMeteData().sprite};
+        _overrideRandomWith = new[] { getRandomSpriteWithMeteData().sprite };
       }
     }
     else {
@@ -186,9 +201,6 @@ class MainMenuBackground : MonoBehaviour {
   }
 
   void SetPattern() {
-    // var values = Enum.GetValues(typeof(Patterns));
-    // pattern = (Patterns) values.GetValue(Random.Range(0, values.Length));
-    // pattern = Patterns.Spiral;
     pattern = PatternUtils.GetRandomPattern();
   }
 
@@ -198,57 +210,83 @@ class MainMenuBackground : MonoBehaviour {
       i.spriteRenderer.color = _color;
     }
   }
-
+  // TODO is this needed / rename if so
+  private bool x = true;
   void AfterResize(Vector2 screenSizeInWorldCoords) {
+    
+    // TODO extract this, only needs to happen when SCREEN resizes
+    var initialPos = _mainCam.ViewportToWorldPoint(new Vector3(0, 0, _mainCam.nearClipPlane));
+    initialPos.z = 0;
+    transform.position = initialPos;
+    
     _colRow = pattern.GetNextColAndRow(screenSizeInWorldCoords, GetFullSize());
     seed = Random.Range(0, 10);
 
     var nextSize = _colRow.x * _colRow.y;
+    Vector3 zero = Vector3.zero;
+    if (x) {
+      Array.Sort(_instances, (instance1, instance2) => {
+        var pos1 = instance1.spriteRenderer.transform.position;
+        var pos2 = instance2.spriteRenderer.transform.position;
+        return pos1.x + pos1.y > pos2.x + pos2.y ? 1 : -1;
+      });
+    }
+    if (_instances.Length > 0) {
+      _instances[0].spriteRenderer.transform.position = Vector3.Lerp(_instances[0].spriteRenderer.transform.position,
+        initialPos, Time.deltaTime);
+      zero = _grid.GetCellCenterWorld(Vector3Int.zero) - _instances[0].spriteRenderer.transform.position;
+    }
 
-    if (nextSize < _instances.Length) {
+    if (_instances.Length > nextSize) {
       for (var i = nextSize; i < _instances.Length; i++) {
         Destroy(_instances[i].spriteRenderer.gameObject);
       }
     }
 
+    var currCol = 0;
+    var currRow = 0;
+
     var newInstances = new Instance[nextSize];
     for (var i = 0; i < newInstances.Length; i++) {
       if (_instances.Length > i) {
-        _instances[i].ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
+        _instances[i].spriteRenderer.size = _instances[i].spriteWithMetadata.sizeData;
+        _instances[i].spriteRenderer.transform.position =
+          _grid.GetCellCenterWorld(new Vector3Int(currCol, currRow, 0)) - zero;
         newInstances[i] = _instances[i];
-        var sr = _instances[i].spriteRenderer.GetComponent<SpriteRenderer>();
-        sr.size = _instances[i].spriteWithMetadata.sizeData;
       }
       else {
         newInstances[i] = new Instance(new GameObject("Sprite" + i).AddComponent<SpriteRenderer>(),
           getRandomSpriteWithMeteData(), orderInLayer);
         newInstances[i].spriteRenderer.transform.parent = transform;
         newInstances[i].spriteRenderer.color = _color;
+        newInstances[i].spriteRenderer.transform.position =
+          _grid.GetCellCenterWorld(new Vector3Int(currCol, currRow, 0)) - zero;
+        newInstances[i].spriteRenderer.transform.rotation = _currentRotation;
+      }
+
+      currCol++;
+      if (currCol == _colRow.x) {
+        currRow++;
+        currCol = 0;
       }
     }
 
-
-    _instances = new Instance[nextSize];
     _instances = newInstances;
-
-    var initialPos = _mainCam.ViewportToWorldPoint(new Vector3(0, 0, _mainCam.nearClipPlane));
-    initialPos.z = 0;
-    transform.position = initialPos;
-    var currCol = 0;
-    var currRow = 0;
-    foreach (var instance in newInstances) {
-      instance.spriteRenderer.transform.position = new Vector3(
-        currCol * GetFullSize() + GetFullSize() / 2 + initialPos.x,
-        currRow * GetFullSize() + GetFullSize() / 2 + initialPos.y, 0);
-      instance.spriteRenderer.transform.rotation = _currentRotation;
-      currCol = (currCol + 1) % _colRow.x;
-      if (currCol == 0) {
-        currRow = (currRow + 1) % _colRow.y;
-      }
-    }
   }
 
   void Update() {
+    if (!_sizes.IsEqual(_targetSizes, 0.1f)) {
+      var nextSizes = _sizes.Lerp(_targetSizes, Time.deltaTime);
+      _sizes = nextSizes;
+      UpdateSwm();
+      UpdateGrid();
+      AfterResize(ResizeListener.screenSizeInWorldCoords);
+      x = false;
+      return;
+    }
+
+    x = true;
+
     Transform t;
     var curCol = 0;
     var curRow = 0;

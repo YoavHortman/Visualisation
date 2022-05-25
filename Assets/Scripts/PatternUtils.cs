@@ -16,6 +16,14 @@ public struct Sizes {
   public float Sum() {
     return spriteSize + borderPadding;
   }
+  
+  public Sizes Lerp(Sizes sizes, float t) {
+    return new Sizes(Mathf.Lerp(spriteSize, sizes.spriteSize, t), Mathf.Lerp(borderPadding, sizes.borderPadding, t));
+  }
+
+  public bool IsEqual(Sizes sizes, float tolerance) {
+    return Math.Abs(borderPadding - sizes.borderPadding) < tolerance && Math.Abs(spriteSize - sizes.spriteSize) < tolerance;
+  }
 }
 public static class PatternUtils {
   public static IDictionary<string, BasePattern> allPatterns = new Dictionary<string, BasePattern> {
