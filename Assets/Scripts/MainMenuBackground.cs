@@ -103,6 +103,7 @@ class MainMenuBackground : MonoBehaviour {
     Invoke(nameof(UpdateSize), getRandomInRange());
     Invoke(nameof(UpdateSpeedAndRotation), getRandomInRange());
     Invoke(nameof(SetMode), getRandomInRange());
+    Invoke(nameof(UpdatePattern), getRandomInRange());
   }
 
   void UpdateGrid() {
@@ -116,11 +117,10 @@ class MainMenuBackground : MonoBehaviour {
 
   [EditorButton]
   void UpdateSizeEditor() {
-    SetPattern();
-    _sizes = pattern.GetSizes();
+    _targetSizes = pattern.GetSizes();
 
-    UpdateGrid();
-    UpdateSwm();
+    // UpdateGrid();
+    // UpdateSwm();
 
     pattern.AfterSizeUpdate(_instances, _colRow, _grid);
   }
@@ -184,24 +184,23 @@ class MainMenuBackground : MonoBehaviour {
   }
 
 
+  void UpdatePattern() {
+    pattern = PatternUtils.GetRandomPattern();
+    Invoke(nameof(UpdatePattern), getRandomInRange() * 2);
+  }
+  
   void SetMode() {
     if (_overrideRandomWith == null) {
       if (Random.value > 0.5f && Combos.Length > 0) {
         _overrideRandomWith = Combos[Random.Range(0, Combos.Length)].childrens.ToArray();
-      }
-      else {
+      } else {
         _overrideRandomWith = new[] { getRandomSpriteWithMeteData().sprite };
       }
-    }
-    else {
+    } else {
       _overrideRandomWith = null;
     }
 
     Invoke(nameof(SetMode), getRandomInRange() * 2);
-  }
-
-  void SetPattern() {
-    pattern = PatternUtils.GetRandomPattern();
   }
 
   void ChangeColor() {
@@ -210,30 +209,35 @@ class MainMenuBackground : MonoBehaviour {
       i.spriteRenderer.color = _color;
     }
   }
+
   // TODO is this needed / rename if so
   private bool x = true;
+
   void AfterResize(Vector2 screenSizeInWorldCoords) {
-    
     // TODO extract this, only needs to happen when SCREEN resizes
     var initialPos = _mainCam.ViewportToWorldPoint(new Vector3(0, 0, _mainCam.nearClipPlane));
     initialPos.z = 0;
     transform.position = initialPos;
-    
+
+    var oldRow = _colRow.y;
+
     _colRow = pattern.GetNextColAndRow(screenSizeInWorldCoords, GetFullSize());
     seed = Random.Range(0, 10);
 
     var nextSize = _colRow.x * _colRow.y;
     Vector3 zero = Vector3.zero;
     if (x) {
+      var mul = Mathf.Max(_colRow.x, _colRow.y);
       Array.Sort(_instances, (instance1, instance2) => {
-        var pos1 = instance1.spriteRenderer.transform.position;
-        var pos2 = instance2.spriteRenderer.transform.position;
-        return pos1.x + pos1.y > pos2.x + pos2.y ? 1 : -1;
+        var pos1 = _grid.WorldToCell(instance1.spriteRenderer.transform.position);
+        var pos2 = _grid.WorldToCell(instance2.spriteRenderer.transform.position);
+        return pos1.x + pos1.y * mul > pos2.x + pos2.y * mul ? 1 : -1;
       });
     }
+
     if (_instances.Length > 0) {
       _instances[0].spriteRenderer.transform.position = Vector3.Lerp(_instances[0].spriteRenderer.transform.position,
-        initialPos, Time.deltaTime);
+        initialPos, Time.deltaTime * 3);
       zero = _grid.GetCellCenterWorld(Vector3Int.zero) - _instances[0].spriteRenderer.transform.position;
     }
 
@@ -248,13 +252,14 @@ class MainMenuBackground : MonoBehaviour {
 
     var newInstances = new Instance[nextSize];
     for (var i = 0; i < newInstances.Length; i++) {
-      if (_instances.Length > i) {
-        _instances[i].spriteRenderer.size = _instances[i].spriteWithMetadata.sizeData;
-        _instances[i].spriteRenderer.transform.position =
+      var ind = oldRow != _colRow.y || nextSize <= _instances.Length ? i : i - currRow;
+      var secondIf = oldRow != _colRow.y || currCol != _colRow.x - 1;
+      if (nextSize <= _instances.Length || (_instances.Length > ind && secondIf)) {
+        _instances[ind].spriteRenderer.size = _instances[ind].spriteWithMetadata.sizeData;
+        _instances[ind].spriteRenderer.transform.position =
           _grid.GetCellCenterWorld(new Vector3Int(currCol, currRow, 0)) - zero;
-        newInstances[i] = _instances[i];
-      }
-      else {
+        newInstances[i] = _instances[ind];
+      } else {
         newInstances[i] = new Instance(new GameObject("Sprite" + i).AddComponent<SpriteRenderer>(),
           getRandomSpriteWithMeteData(), orderInLayer);
         newInstances[i].spriteRenderer.transform.parent = transform;
@@ -276,12 +281,22 @@ class MainMenuBackground : MonoBehaviour {
 
   void Update() {
     if (!_sizes.IsEqual(_targetSizes, 0.1f)) {
-      var nextSizes = _sizes.Lerp(_targetSizes, Time.deltaTime);
+      var nextSizes = _sizes.Lerp(_targetSizes, Time.deltaTime * 3);
       _sizes = nextSizes;
       UpdateSwm();
       UpdateGrid();
       AfterResize(ResizeListener.screenSizeInWorldCoords);
+      // TODO rename?
       x = false;
+      
+      // TODO prevent repeating just for rotation?
+      foreach (var instance in _instances) {
+        var tx = instance.spriteRenderer.transform;
+
+        tx.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
+        _currentRotation = tx.rotation;
+      }
+
       return;
     }
 
