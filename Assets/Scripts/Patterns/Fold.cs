@@ -27,6 +27,21 @@ public class Fold : BasePattern {
     return GetColsAndRows(screenSizeInWorldCoords, fullSize);
   }
 
+  public override void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
+    Vector2Int colRow, Vector2 movementSpeed) {
+    Update(t, instance, curCol, curRow, index, fullSize, grid, colRow, movementSpeed);
+  }
+
+  public override bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
+    foreach (var instance in instances) {
+      if (!PatternUtils.DidReach(instance.spriteRenderer.transform, instance.targetPos, 0.0001f)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   public override void Update(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize,
     Grid grid,
     Vector2Int colRow, Vector2 movementSpeed) {

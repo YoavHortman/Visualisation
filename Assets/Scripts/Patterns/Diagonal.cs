@@ -1,7 +1,7 @@
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Diagonal : BasePattern {
-
   public override bool GetShouldHandleInstanceBounds() {
     return true;
   }
@@ -26,21 +26,36 @@ public class Diagonal : BasePattern {
     return GetColsAndRowsWithBuffer(screenSizeInWorldCoords, fullSize);
   }
 
+  public override void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index,
+    float fullSize, Grid grid,
+    Vector2Int colRow, Vector2 movementSpeed) {
+    instance.targetPos = grid.GetCellCenterWorld(grid.WorldToCell(t.position));
+    t.position = Vector3.MoveTowards(t.position, instance.targetPos, Time.deltaTime * movementSpeed.magnitude);
+  }
+
+  public override bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
+    foreach (var instance in instances) {
+      if (!PatternUtils.DidReach(instance.spriteRenderer.transform, instance.targetPos, 0.0001f)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
   public override void Update(Transform t, Instance instance, int curCol, int curRow, int index,
     float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
     if (MainMenuBackground.seed % 2 == 0) {
       if (curCol % 2 == 0) {
         t.position += new Vector3(Time.deltaTime * movementSpeed.x, -Time.deltaTime * movementSpeed.y, 0);
-      }
-      else {
+      } else {
         t.position += new Vector3(Time.deltaTime * movementSpeed.x, Time.deltaTime * movementSpeed.y, 0);
       }
-    }
-    else {
+    } else {
       if (curRow % 2 == 0) {
         t.position += new Vector3(-Time.deltaTime * movementSpeed.x, Time.deltaTime * movementSpeed.y, 0);
-      }
-      else {
+      } else {
         t.position += new Vector3(Time.deltaTime * movementSpeed.x, Time.deltaTime * movementSpeed.y, 0);
       }
     }

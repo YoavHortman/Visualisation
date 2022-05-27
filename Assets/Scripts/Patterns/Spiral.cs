@@ -25,6 +25,15 @@ public class Spiral : BasePattern {
     return GetNextColAndRow(screenSizeInWorldCoords, fullSize);
   }
 
+  public override void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
+    Vector2Int colRow, Vector2 movementSpeed) {
+    throw new System.NotImplementedException();
+  }
+
+  public override bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
+    throw new System.NotImplementedException();
+  }
+
   public override void Update(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
     Vector2Int colRow, Vector2 movementSpeed) {
     var center = Vector3.zero;

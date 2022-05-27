@@ -25,12 +25,28 @@ public class Circles : BasePattern {
     return new Vector2Int(nextColCount, nextRowCount);
   }
 
+  public override void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
+    Vector2Int colRow, Vector2 movementSpeed) {
+    instance.targetPos = grid.GetCellCenterWorld(new Vector3Int(curCol, curRow, 0));
+    t.position = Vector3.MoveTowards(t.position, instance.targetPos, Time.deltaTime * movementSpeed.magnitude / 3);
+  }
+
+  public override bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
+    foreach (var instance in instances) {
+      if (!PatternUtils.DidReach(instance.spriteRenderer.transform, instance.targetPos, 0.0001f)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   public override void Update(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
     var r = fullSize / 4;
     var x = r * Mathf.Cos(_angle + index);
     var y = r * Mathf.Sin(_angle + index);
     var center = grid.GetCellCenterWorld(new Vector3Int(curCol, curRow, 0));
-    t.position = center + new Vector3(x, y, 0);
+    t.position = Vector3.MoveTowards(t.position, center + new Vector3(x, y, 0), Time.deltaTime * movementSpeed.magnitude);
   }
 
 }

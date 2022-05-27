@@ -64,6 +64,8 @@ class MainMenuBackground : MonoBehaviour {
   public static int seed;
 
   private BasePattern pattern;
+  private BasePattern nextPattern;
+  private bool _isPreSizeUpdate = false;
 
   [Serializable]
   struct Childrens {
@@ -93,7 +95,10 @@ class MainMenuBackground : MonoBehaviour {
     _instances = new Instance[] { };
     _mainCam = Camera.main;
     _grid = GetComponent<Grid>();
-    pattern = new Default();
+    _targetSizes = new Sizes(5, 0.2f);
+    _sizes = _targetSizes;
+    pattern = PatternUtils.GetInitialPattern();
+    nextPattern = pattern;
     UpdateGrid();
     InitSpritesWithMetaData();
 
@@ -103,7 +108,7 @@ class MainMenuBackground : MonoBehaviour {
     Invoke(nameof(UpdateSize), getRandomInRange());
     Invoke(nameof(UpdateSpeedAndRotation), getRandomInRange());
     Invoke(nameof(SetMode), getRandomInRange());
-    Invoke(nameof(UpdatePattern), getRandomInRange());
+    // Invoke(nameof(UpdatePattern), getRandomInRange());
   }
 
   void UpdateGrid() {
@@ -117,23 +122,18 @@ class MainMenuBackground : MonoBehaviour {
 
   [EditorButton]
   void UpdateSizeEditor() {
-    _targetSizes = pattern.GetSizes();
-
-    // UpdateGrid();
-    // UpdateSwm();
-
-    pattern.AfterSizeUpdate(_instances, _colRow, _grid);
+    _isPreSizeUpdate = true;
   }
 
-  void UpdateSize() {
-    SetPattern();
-    _sizes = pattern.GetSizes();
+  void Resize() {
+    _targetSizes = nextPattern.GetSizes();
 
     UpdateGrid();
     UpdateSwm();
+  }
 
-    pattern.AfterSizeUpdate(_instances, _colRow, _grid);
-    Invoke(nameof(UpdateSize), getRandomInRange());
+  void UpdateSize() {
+    _isPreSizeUpdate = true;
   }
 
   [EditorButton]
@@ -141,8 +141,6 @@ class MainMenuBackground : MonoBehaviour {
     rotationSpeed = Random.Range(-50f, 50f);
     movementSpeed = new Vector2(Random.Range(-2f, 2f), Random.Range(-2f, 2f));
     Invoke(nameof(UpdateSpeedAndRotation), getRandomInRange());
-    // rotationSpeed = 0;
-    // movementSpeed = Vector2.zero;
   }
 
 
@@ -221,7 +219,7 @@ class MainMenuBackground : MonoBehaviour {
 
     var oldRow = _colRow.y;
 
-    _colRow = pattern.GetNextColAndRow(screenSizeInWorldCoords, GetFullSize());
+    _colRow = nextPattern.GetNextColAndRow(screenSizeInWorldCoords, _targetSizes.Sum() > _sizes.Sum() ? _sizes.Sum() : _targetSizes.Sum());
     seed = Random.Range(0, 10);
 
     var nextSize = _colRow.x * _colRow.y;
@@ -236,8 +234,9 @@ class MainMenuBackground : MonoBehaviour {
     }
 
     if (_instances.Length > 0) {
-      _instances[0].spriteRenderer.transform.position = Vector3.Lerp(_instances[0].spriteRenderer.transform.position,
-        initialPos, Time.deltaTime * 3);
+      _instances[0].spriteRenderer.transform.position = Vector3.MoveTowards(
+        _instances[0].spriteRenderer.transform.position,
+        _grid.GetCellCenterWorld(_grid.WorldToCell(initialPos)), Time.deltaTime * Mathf.Abs(movementSpeed.y));
       zero = _grid.GetCellCenterWorld(Vector3Int.zero) - _instances[0].spriteRenderer.transform.position;
     }
 
@@ -280,15 +279,15 @@ class MainMenuBackground : MonoBehaviour {
   }
 
   void Update() {
-    if (!_sizes.IsEqual(_targetSizes, 0.1f)) {
-      var nextSizes = _sizes.Lerp(_targetSizes, Time.deltaTime * 3);
+    if (!_sizes.IsEqual(_targetSizes, 0.0001f)) {
+      var nextSizes = _sizes.MoveTowards(_targetSizes, Time.deltaTime * Mathf.Abs(movementSpeed.y) / 2);
       _sizes = nextSizes;
       UpdateSwm();
       UpdateGrid();
       AfterResize(ResizeListener.screenSizeInWorldCoords);
       // TODO rename?
       x = false;
-      
+
       // TODO prevent repeating just for rotation?
       foreach (var instance in _instances) {
         var tx = instance.spriteRenderer.transform;
@@ -300,7 +299,14 @@ class MainMenuBackground : MonoBehaviour {
       return;
     }
 
-    x = true;
+    if (x == false) {
+      pattern = nextPattern;
+      nextPattern = PatternUtils.GetRandomPattern();
+      pattern.AfterSizeUpdate(_instances, _colRow, _grid);
+      x = true;
+      Invoke(nameof(UpdateSize), getRandomInRange());
+    }
+
 
     Transform t;
     var curCol = 0;
@@ -311,7 +317,12 @@ class MainMenuBackground : MonoBehaviour {
 
       t.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
       _currentRotation = t.rotation;
-      pattern.Update(t, instance, curCol, curRow, index, GetFullSize(), _grid, _colRow, movementSpeed);
+      if (_isPreSizeUpdate) {
+        pattern.PreResizeUpdate(t, instance, curCol, curRow, index, GetFullSize(), _grid, _colRow, movementSpeed);
+      } else {
+        pattern.Update(t, instance, curCol, curRow, index, GetFullSize(), _grid, _colRow, movementSpeed);
+      }
+
       if (pattern.GetShouldHandleInstanceBounds()) {
         handleInstanceBounds(t, instance, GetFullSize());
       }
@@ -323,7 +334,15 @@ class MainMenuBackground : MonoBehaviour {
         curCol = 0;
       }
     }
-    pattern.AfterUpdate(_instances, _grid, _colRow, movementSpeed);
+
+    if (_isPreSizeUpdate) {
+      if (pattern.IsReadyForResize(_instances, _grid, _colRow, movementSpeed)) {
+        _isPreSizeUpdate = false;
+        Resize();
+      }
+    } else {
+      pattern.AfterUpdate(_instances, _grid, _colRow, movementSpeed);
+    }
 
 
     ChangeColor();
@@ -335,31 +354,26 @@ class MainMenuBackground : MonoBehaviour {
 
   public void handleInstanceBounds(Transform t, Instance instance, float fullSize) {
     // var cur = _grid.WorldToCell(t.position);
-    // if (cur.x >= colCount) {
-    //   t.position = _grid.CellToWorld(new Vector3Int(-1, cur.y, 0));
+    // if (cur.x >= _colRow.x) {
+    //   t.position = _grid.GetCellCenterWorld(new Vector3Int(-1, cur.y, 0));
     // } else if (cur.x < -1) {
-    //   t.position = _grid.CellToWorld(new Vector3Int(colCount, cur.y, 0));
+    //   t.position = _grid.GetCellCenterWorld(new Vector3Int(_colRow.x - 1, cur.y, 0));
     // }
-
-    // cur = _grid.WorldToCell(t.position);
-    // if (cur.y >= rowCount) {
-    //   t.position = _grid.CellToWorld(new Vector3Int(cur.x, -1, 0));
+    // if (cur.y > _colRow.y) {
+    //   t.position = _grid.GetCellCenterWorld(new Vector3Int(cur.x, -1, 0));
     // } else if (cur.y < -1) {
-    //   t.position = _grid.CellToWorld(new Vector3Int(cur.x, rowCount, 0));
+    //   t.position = _grid.GetCellCenterWorld(new Vector3Int(cur.x, _colRow.y - 1, 0));
     // }
     if (t.position.x >= fullSize * _colRow.x / 2) {
       t.position -= new Vector3(fullSize * _colRow.x, 0, 0);
       instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
-    }
-    else if (t.position.y >= fullSize * _colRow.y / 2) {
+    } else if (t.position.y >= fullSize * _colRow.y / 2) {
       t.position -= new Vector3(0, fullSize * _colRow.y, 0);
       instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
-    }
-    else if (t.position.y <= -fullSize * _colRow.y / 2) {
+    } else if (t.position.y <= -fullSize * _colRow.y / 2) {
       t.position += new Vector3(0, fullSize * _colRow.y, 0);
       instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
-    }
-    else if (t.position.x <= -fullSize * _colRow.x / 2) {
+    } else if (t.position.x <= -fullSize * _colRow.x / 2) {
       t.position += new Vector3(fullSize * _colRow.x, 0, 0);
       instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
     }

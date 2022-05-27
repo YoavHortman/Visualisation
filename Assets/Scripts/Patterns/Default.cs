@@ -17,6 +17,14 @@
       return GetColsAndRowsWithBuffer(screenSizeInWorldCoords, fullSize);
     }
 
+    public override void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
+      Vector2Int colRow, Vector2 movementSpeed) {
+    }
+
+    public override bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
+      return true;
+    }
+
     public override void Update(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
       t.position += new Vector3(Time.deltaTime * movementSpeed.x, Time.deltaTime * movementSpeed.y, 0);
     }

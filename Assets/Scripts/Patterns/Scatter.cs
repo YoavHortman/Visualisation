@@ -27,6 +27,20 @@ public class Scatter : BasePattern {
     return GetColsAndRows(screenSizeInWorldCoords, fullSize);
   }
 
+  public override void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
+    Vector2Int colRow, Vector2 movementSpeed) {
+    Update(t, instance, curCol, curRow, index, fullSize, grid, colRow, movementSpeed);
+  }
+
+  public override bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
+    foreach (var instance in instances) {
+      if (!PatternUtils.DidReach(instance.spriteRenderer.transform, instance.targetPos, Time.deltaTime * 2)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
   public override void Update(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
     t.position = Vector2.Lerp(t.position, instance.targetPos, Mathf.Abs(Time.deltaTime * movementSpeed.y * 3));
   }

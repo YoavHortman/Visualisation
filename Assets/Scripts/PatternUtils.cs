@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public struct Sizes {
   public float spriteSize;
   public float borderPadding;
+
   public Sizes(float spriteSize, float borderPadding) {
     this.spriteSize = spriteSize;
     this.borderPadding = borderPadding;
@@ -16,18 +17,35 @@ public struct Sizes {
   public float Sum() {
     return spriteSize + borderPadding;
   }
-  
-  public Sizes Lerp(Sizes sizes, float t) {
-    return new Sizes(Mathf.Lerp(spriteSize, sizes.spriteSize, t), Mathf.Lerp(borderPadding, sizes.borderPadding, t));
+
+  public Sizes Lerp(Sizes sizes, float time, float tolerance) {
+    var nextSize = Mathf.Lerp(spriteSize, sizes.spriteSize, time);
+    var nextBorder = Mathf.Lerp(borderPadding, sizes.borderPadding, time);
+    if (Mathf.Abs(spriteSize - sizes.spriteSize) < tolerance) {
+      nextSize = Mathf.MoveTowards(spriteSize, sizes.spriteSize, time);
+    }
+
+    if (Mathf.Abs(borderPadding - sizes.borderPadding) < tolerance) {
+      nextBorder = Mathf.MoveTowards(borderPadding, sizes.borderPadding, time);
+    }
+
+    return new Sizes(nextSize, nextBorder);
+  }
+
+  public Sizes MoveTowards(Sizes sizes, float t) {
+    return new Sizes(Mathf.MoveTowards(spriteSize, sizes.spriteSize, t),
+      Mathf.MoveTowards(borderPadding, sizes.borderPadding, t));
   }
 
   public bool IsEqual(Sizes sizes, float tolerance) {
-    return Math.Abs(borderPadding - sizes.borderPadding) < tolerance && Math.Abs(spriteSize - sizes.spriteSize) < tolerance;
+    return Math.Abs(borderPadding - sizes.borderPadding) < tolerance &&
+           Math.Abs(spriteSize - sizes.spriteSize) < tolerance;
   }
 }
+
 public static class PatternUtils {
   public static IDictionary<string, BasePattern> allPatterns = new Dictionary<string, BasePattern> {
-    {"circle", new Circle() },
+    { "circle", new Circle() },
     { "circles", new Circles() },
     { "default", new Default() },
     { "diagonal", new Diagonal() },
@@ -37,7 +55,7 @@ public static class PatternUtils {
     { "snakes", new Snakes() },
     { "steps", new Steps() },
     { "zigzag", new Zigzag() },
-    { "fold", new Fold()}
+    { "fold", new Fold() }
   };
 
   public static void SetRandomTargetsInRadius(Instance[] instances, float radius) {
@@ -62,18 +80,22 @@ public static class PatternUtils {
     }
 
     foreach (var instance in instances) {
-      Vector3Int pos = (Vector3Int) allGridPositions[Random.Range(0, allGridPositions.Count)];
+      Vector3Int pos = (Vector3Int)allGridPositions[Random.Range(0, allGridPositions.Count)];
       instance.targetPos = grid.GetCellCenterWorld(pos);
       allGridPositions.Remove(pos);
     }
   }
-  
+
   public static bool DidReach(Transform t, Vector2 target, float minDistance) {
     return Vector2.Distance(t.position, target) < minDistance;
   }
 
   public static BasePattern GetRandomPattern() {
-    // return allPatterns.ElementAt(Random.Range(0, allPatterns.Count)).Value;
-    return allPatterns["fold"];
+    return allPatterns.ElementAt(Random.Range(0, allPatterns.Count)).Value;
+    // return allPatterns["scatter"];
+  }
+
+  public static BasePattern GetInitialPattern() {
+    return allPatterns["default"];
   }
 }
