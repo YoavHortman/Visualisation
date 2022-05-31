@@ -8,34 +8,41 @@ public class SpinWheel : MonoBehaviour {
     private float direction = 1;
     private bool isShaking = false;
 
-    private Vector2 shakeDir = Vector2.zero;
+    private Vector2 shakeDir = Vector2.down;
     // private Vector2[] v = new []{Vector2.up, Vector2.down};
     void Start() {
         rb = GetComponent<Rigidbody2D>();
     }
     [EditorButton]
     void RandomShit() {
-        direction = Random.Range(-1f, 1f);
-        Invoke(nameof(RandomShit), 1000);
+        direction = Random.Range(-10f, 10f);
+        // Invoke(nameof(RandomShit), 1000);
     }
     [EditorButton]
     void Shake() {
         isShaking = !isShaking;
-        shakeDir = Vector2.down;
     }
 
+    private float shakeMod = 0.2f;
+    private float shakeSpeedMod = 0.2f;
     // Update is called once per frame
     void Update()
     {
-        rb.MoveRotation(rb.rotation - direction * Time.deltaTime * 50);
+        rb.MoveRotation(rb.rotation - direction);
 
         if (isShaking) {
             if (shakeDir == Vector2.down) {
-                rb.MovePosition(rb.position + shakeDir);
+                rb.MovePosition(rb.position + shakeDir * shakeMod);
                 shakeDir = Vector2.up;
+                isShaking = false;
+                Invoke(nameof(Shake), shakeSpeedMod);
             } else {
-                rb.MovePosition(rb.position + shakeDir);
+                rb.MovePosition(rb.position + shakeDir * shakeMod);
                 shakeDir = Vector2.down;
+                isShaking = false;
+                Invoke(nameof(Shake), shakeSpeedMod);
+                shakeMod = Random.Range(0.1f, 0.3f);
+                shakeSpeedMod = Random.Range(0.1f, 0.3f);
             }
         }
     }
