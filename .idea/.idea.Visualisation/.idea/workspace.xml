@@ -1,37 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ebf542c-65f6-4482-80c7-0df7631bfc1e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="4ccf75bf-d711-4e5c-85f5-49784fa129c9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/PatternUtils.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/PatternUtils.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/BasePattern.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/BasePattern.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Circle.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Circle.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Circles.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Circles.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Default.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Default.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Diagonal.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Diagonal.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Explode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Explode.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Fold.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Fold.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Scatter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Scatter.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Shake.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Shake.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Snakes.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Snakes.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Spiral.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Spiral.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Steps.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Steps.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Zigzag.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Zigzag.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/Outline.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Ourlinw/Outline.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaded.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaded.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/boot.config" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="expriements-refactoring" />
+      </map>
+    </option>
+  </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../Desktop/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/f8/ecf1e654/Mathf.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/576e98653a5f49679066789a4e0b3ea2469000/fa/03902f49/ArrayList.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/66/f376e0e6/Comparison`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d303c2bf72cd4cec95665b89c457d265d2b8ef3ed6da17cd4f85587c2f9de7/System.Linq.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/PatternUtils.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/PatternUtils.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/Patterns/BasePattern.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/Patterns/BasePattern.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/GridBrushesDropdown.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="29wTTrjiMcXdw2Jx9Jx7N1qyIbC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
+    "rider.run.widget.enabled.cache": "false",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4ccf75bf-d711-4e5c-85f5-49784fa129c9" name="Changes" comment="" />
+      <created>1654023160757</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1654023160757</updated>
+      <workItem from="1654023164945" duration="1090000" />
+    </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
@@ -46,5 +108,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
 </project>
