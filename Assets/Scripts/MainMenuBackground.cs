@@ -167,18 +167,19 @@ class MainMenuBackground : MonoBehaviour {
 
     AfterResize(ResizeListener.screenSizeInWorldCoords);
   }
-
-
+  
   void SetMode() {
     if (_overrideRandomWith == null) {
-      if (Random.value > 0.5f && Combos.Length > 0) {
-        _overrideRandomWith = Combos[Random.Range(0, Combos.Length)].childrens.ToArray();
+      if (Random.value > 0.5f) {
+        _overrideRandomWith = new[] { getRandomSpriteWithMeteData().sprite, getRandomSpriteWithMeteData().sprite };
+      } else {
+        if (Random.value > 0.5f && Combos.Length > 0) {
+          _overrideRandomWith = Combos[Random.Range(0, Combos.Length)].childrens.ToArray();
+        } else {
+          _overrideRandomWith = new[] { getRandomSpriteWithMeteData().sprite };
+        }
       }
-      else {
-        _overrideRandomWith = new[] {getRandomSpriteWithMeteData().sprite};
-      }
-    }
-    else {
+    } else {
       _overrideRandomWith = null;
     }
 
@@ -215,8 +216,7 @@ class MainMenuBackground : MonoBehaviour {
         newInstances[i] = _instances[i];
         var sr = _instances[i].spriteRenderer.GetComponent<SpriteRenderer>();
         sr.size = _instances[i].spriteWithMetadata.sizeData;
-      }
-      else {
+      } else {
         newInstances[i] = new Instance(new GameObject("Sprite" + i).AddComponent<SpriteRenderer>(),
           getRandomSpriteWithMeteData(), orderInLayer);
         newInstances[i].spriteRenderer.transform.parent = transform;
@@ -267,6 +267,7 @@ class MainMenuBackground : MonoBehaviour {
         curCol = 0;
       }
     }
+
     pattern.AfterUpdate(_instances, _grid, _colRow, movementSpeed);
 
 
@@ -294,16 +295,13 @@ class MainMenuBackground : MonoBehaviour {
     if (t.position.x >= fullSize * _colRow.x / 2) {
       t.position -= new Vector3(fullSize * _colRow.x, 0, 0);
       instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
-    }
-    else if (t.position.y >= fullSize * _colRow.y / 2) {
+    } else if (t.position.y >= fullSize * _colRow.y / 2) {
       t.position -= new Vector3(0, fullSize * _colRow.y, 0);
       instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
-    }
-    else if (t.position.y <= -fullSize * _colRow.y / 2) {
+    } else if (t.position.y <= -fullSize * _colRow.y / 2) {
       t.position += new Vector3(0, fullSize * _colRow.y, 0);
       instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
-    }
-    else if (t.position.x <= -fullSize * _colRow.x / 2) {
+    } else if (t.position.x <= -fullSize * _colRow.x / 2) {
       t.position += new Vector3(fullSize * _colRow.x, 0, 0);
       instance.ConfigSpriteWithMetadata(getRandomSpriteWithMeteData(), orderInLayer);
     }
