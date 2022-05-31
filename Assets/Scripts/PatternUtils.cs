@@ -55,7 +55,8 @@ public static class PatternUtils {
     { "snakes", new Snakes() },
     { "steps", new Steps() },
     { "zigzag", new Zigzag() },
-    { "fold", new Fold() }
+    { "fold", new Fold() },
+    { "lines", new Lines() }
   };
 
   public static void SetRandomTargetsInRadius(Instance[] instances, float radius) {
@@ -92,7 +93,7 @@ public static class PatternUtils {
 
   public static BasePattern GetRandomPattern() {
     return allPatterns.ElementAt(Random.Range(0, allPatterns.Count)).Value;
-    // return allPatterns["scatter"];
+    // return allPatterns[Random.Range(0,1) == 0 ? "lines" : "circles"];
   }
 
   public static BasePattern GetInitialPattern() {

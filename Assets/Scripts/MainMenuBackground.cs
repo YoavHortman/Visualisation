@@ -90,7 +90,7 @@ class MainMenuBackground : MonoBehaviour {
     _instances = new Instance[] { };
     _mainCam = Camera.main;
     _grid = GetComponent<Grid>();
-    pattern = new Default();
+    pattern = PatternUtils.GetInitialPattern();
     UpdateGrid();
     InitSpritesWithMetaData();
 

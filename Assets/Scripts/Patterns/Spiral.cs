@@ -25,12 +25,12 @@ public class Spiral : BasePattern {
     return GetNextColAndRow(screenSizeInWorldCoords, fullSize);
   }
 
-  public override void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
+  public override void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
     Vector2Int colRow, Vector2 movementSpeed) {
     throw new System.NotImplementedException();
   }
 
-  public override bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
+  public override bool IsReadyForPatternChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
     throw new System.NotImplementedException();
   }
 

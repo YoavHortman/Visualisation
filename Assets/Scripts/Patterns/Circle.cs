@@ -25,13 +25,13 @@ public class Circle : BasePattern {
     return new Vector2Int(nextColCount, nextRowCount);
   }
 
-  public override void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
+  public override void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
     Vector2Int colRow, Vector2 movementSpeed) {
     instance.targetPos = grid.GetCellCenterWorld(grid.WorldToCell(t.position));
     t.position = Vector2.MoveTowards(t.position, instance.targetPos, Time.deltaTime * Mathf.Abs(movementSpeed.y));
   }
 
-  public override bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
+  public override bool IsReadyForPatternChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
     foreach (var instance in instances) {
       if (!PatternUtils.DidReach(instance.spriteRenderer.transform, instance.targetPos, 0.0001f)) {
         return false;

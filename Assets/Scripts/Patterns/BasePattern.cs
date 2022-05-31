@@ -8,8 +8,8 @@ public abstract class BasePattern {
   public abstract Sizes GetSizes();
   public abstract void AfterSizeUpdate(Instance[] instances, Vector2Int colRow, Grid grid);
   public abstract Vector2Int GetNextColAndRow(Vector2 screenSizeInWorldCoords, float fullSize);
-  public abstract void PreResizeUpdate(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
-  public abstract bool IsReadyForResize(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
+  public abstract void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
+  public abstract bool IsReadyForPatternChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
   public abstract void Update(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
 
 
