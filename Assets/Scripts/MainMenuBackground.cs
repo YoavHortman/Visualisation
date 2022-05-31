@@ -252,7 +252,6 @@ public class MainMenuBackground : MonoBehaviour
   void SetPattern() {
     var values = Enum.GetValues(typeof(Patterns));
     pattern = (Patterns) values.GetValue(Random.Range(0, values.Length));
-    pattern = Patterns.Spiral;
   }
 
   void ChangeColor() {
