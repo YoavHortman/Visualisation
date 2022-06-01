@@ -49,6 +49,6 @@ public class Shake : BasePattern {
       instance.leaving = !instance.leaving;
     }
 
-    t.position = Vector2.MoveTowards(t.position, instance.targetPos, Mathf.Abs(Time.deltaTime * movementSpeed.y * 3));
+    t.position = Vector2.MoveTowards(t.position, instance.targetPos, Mathf.Abs(Time.deltaTime * movementSpeed.magnitude * 3));
   }
 }

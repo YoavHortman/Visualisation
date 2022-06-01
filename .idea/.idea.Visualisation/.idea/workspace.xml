@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4ccf75bf-d711-4e5c-85f5-49784fa129c9" name="Changes" comment="Added lines, renamed some shiiiiit">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/CircleShake.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/CircleShake.cs.meta" afterDir="false" />
+    <list default="true" id="4ccf75bf-d711-4e5c-85f5-49784fa129c9" name="Changes" comment="more patterns">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PatternUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PatternUtils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Shake.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Shake.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,13 +21,16 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../Desktop/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/35/50eabe21/Random.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/ed/80b1038f/Vector2.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/f8/ecf1e654/Mathf.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/576e98653a5f49679066789a4e0b3ea2469000/fa/03902f49/ArrayList.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/66/f376e0e6/Comparison`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d303c2bf72cd4cec95665b89c457d265d2b8ef3ed6da17cd4f85587c2f9de7/System.Linq.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scenes/SampleScene.unity" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/PatternUtils.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/Patterns/BasePattern.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/Patterns/Shake.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/GridBrushesDropdown.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -58,7 +59,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1654023160757</updated>
-      <workItem from="1654023164945" duration="5097000" />
+      <workItem from="1654023164945" duration="6140000" />
     </task>
     <task id="LOCAL-00001" summary="Pulled out patterns">
       <created>1654030641532</created>
@@ -74,7 +75,14 @@
       <option name="project" value="LOCAL" />
       <updated>1654034452654</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="more patterns">
+      <created>1654036419200</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1654036419200</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -98,6 +106,7 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Pulled out patterns" />
     <MESSAGE value="Added lines, renamed some shiiiiit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added lines, renamed some shiiiiit" />
+    <MESSAGE value="more patterns" />
+    <option name="LAST_COMMIT_MESSAGE" value="more patterns" />
   </component>
 </project>
