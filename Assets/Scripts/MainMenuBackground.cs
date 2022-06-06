@@ -37,6 +37,7 @@ public class Instance {
 }
 
 class MainMenuBackground : MonoBehaviour {
+  [SerializeField] private AudioLoudnessDetector _detector;
   [SerializeField] protected Sprite[] sprites = Array.Empty<Sprite>();
   [SerializeField] protected float rotationSpeed = 20;
   [SerializeField] protected Vector2 movementSpeed = new(-2, -2);
@@ -167,7 +168,7 @@ class MainMenuBackground : MonoBehaviour {
 
     AfterResize(ResizeListener.screenSizeInWorldCoords);
   }
-  
+
   void SetMode() {
     if (_overrideRandomWith == null) {
       if (Random.value > 0.5f) {
@@ -246,6 +247,7 @@ class MainMenuBackground : MonoBehaviour {
   }
 
   void Update() {
+    var mvS = movementSpeed; 
     Transform t;
     var curCol = 0;
     var curRow = 0;
@@ -253,9 +255,9 @@ class MainMenuBackground : MonoBehaviour {
     foreach (var instance in _instances) {
       t = instance.spriteRenderer.transform;
 
-      t.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
+      t.Rotate(Vector3.forward, _detector.audioBand[0] * Time.deltaTime * 120);
       _currentRotation = t.rotation;
-      pattern.Update(t, instance, curCol, curRow, index, GetFullSize(), _grid, _colRow, movementSpeed);
+      pattern.Update(t, instance, curCol, curRow, index, GetFullSize(), _grid, _colRow, mvS);
       if (pattern.GetShouldHandleInstanceBounds()) {
         handleInstanceBounds(t, instance, GetFullSize());
       }
@@ -268,7 +270,7 @@ class MainMenuBackground : MonoBehaviour {
       }
     }
 
-    pattern.AfterUpdate(_instances, _grid, _colRow, movementSpeed);
+    pattern.AfterUpdate(_instances, _grid, _colRow, mvS);
 
 
     ChangeColor();
