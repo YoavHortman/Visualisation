@@ -247,7 +247,7 @@ class MainMenuBackground : MonoBehaviour {
   }
 
   void Update() {
-    var mvS = movementSpeed; 
+    var mvS = movementSpeed * _detector.amplitudeBuffer; 
     Transform t;
     var curCol = 0;
     var curRow = 0;
@@ -255,7 +255,7 @@ class MainMenuBackground : MonoBehaviour {
     foreach (var instance in _instances) {
       t = instance.spriteRenderer.transform;
 
-      t.Rotate(Vector3.forward, _detector.audioBand[0] * Time.deltaTime * 120);
+      t.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
       _currentRotation = t.rotation;
       pattern.Update(t, instance, curCol, curRow, index, GetFullSize(), _grid, _colRow, mvS);
       if (pattern.GetShouldHandleInstanceBounds()) {

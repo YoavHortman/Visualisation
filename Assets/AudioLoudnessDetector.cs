@@ -1,23 +1,25 @@
-using System.Linq;
+using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class AudioLoudnessDetector : MonoBehaviour {
+  public float bufferDropOff = 1.1f;
+  
   private int _loudnessSampleWindow = 64;
   private int _sampleSize = 512;
   private int _bandSize = 8;
+  private readonly int _maxAdjustmentPercentage = 100000;
   private float[] _bandBuffer;
   private float[] _bufferDecrease;
   private float[] _samples;
   private float[] _freqBands;
 
-  private float[] _maxAudioPerBand;
+  public float[] _maxAudioPerBand;
   public float[] audioBand;
   public float[] audioBandBuffer;
 
   public float amplitude;
   public float amplitudeBuffer;
-  private float _amplitudeMax;
+  public float _amplitudeMax;
 
 
   private AudioClip _microphoneClip;
@@ -31,6 +33,7 @@ public class AudioLoudnessDetector : MonoBehaviour {
     _bandBuffer = new float[_bandSize];
     _bufferDecrease = new float[_bandSize];
     _maxAudioPerBand = new float[_bandSize];
+    Array.Fill(_maxAudioPerBand, 0.3f);
     audioBand = new float[_bandSize];
     audioBandBuffer = new float[_bandSize];
 
@@ -57,10 +60,10 @@ public class AudioLoudnessDetector : MonoBehaviour {
     for (int i = 0; i < _bandSize; i++) {
       if (_bandBuffer[i] > _freqBands[i]) {
         _bandBuffer[i] = Mathf.Max(0, _bandBuffer[i] - _bufferDecrease[i]);
-        _bufferDecrease[i] *= 1.2f;
+        _bufferDecrease[i] *= bufferDropOff;
       } else {
         _bandBuffer[i] = _freqBands[i];
-        _bufferDecrease[i] = 0.005f;
+        _bufferDecrease[i] = 0.0005f;
       }
     }
   }
@@ -71,10 +74,11 @@ public class AudioLoudnessDetector : MonoBehaviour {
       _maxAudioPerBand[i] = Mathf.Max(_maxAudioPerBand[i], _freqBands[i]);
       audioBand[i] = _freqBands[i] / _maxAudioPerBand[i];
       audioBandBuffer[i] = _bandBuffer[i] / _maxAudioPerBand[i];
+      _maxAudioPerBand[i] = Mathf.Max(0.3f,  _maxAudioPerBand[i] - _maxAudioPerBand[i] / _maxAdjustmentPercentage);
     }
   }
 
-  private void FixedUpdate() {
+  private void Update() {
     UpdateWaveData();
     UpdateBandBuffer();
     UpdateMaxPerBand();
@@ -93,6 +97,7 @@ public class AudioLoudnessDetector : MonoBehaviour {
     _amplitudeMax = Mathf.Max(_amplitudeMax, curAmp);
     amplitude = curAmp / _amplitudeMax;
     amplitudeBuffer = curAmpBuffer / _amplitudeMax;
+    _amplitudeMax = Mathf.Max(0, _amplitudeMax - _amplitudeMax / _maxAdjustmentPercentage );
   }
 
   // public float GetLoudnessFromMicrophone() {
@@ -118,32 +123,21 @@ public class AudioLoudnessDetector : MonoBehaviour {
   //   return totalLoudness / _loudnessSampleWindow;
   // }
 
-  public void UpdateWaveData() {
+  private void UpdateWaveData() {
     _source.GetSpectrumData(_samples, 0, FFTWindow.BlackmanHarris);
 
-    var chunk = _sampleSize / _bandSize;
+    int count = 0;
+    for (int i = 0; i < _bandSize; i++) {
+      float avg = 0;
+      int sampleCount = (int)Mathf.Pow(2, i) * 2;
+      for (int j = 0; j < sampleCount; j++) {
+        avg += _samples[count] * (count + 1);
+        count++;
+      }
 
-    for (int i = 0; i < _bandSize; i++)
-    {
-      _freqBands[i] = _samples.Skip(i * chunk).Take(chunk).Average();
+      avg /= count;
+
+      _freqBands[i] = avg;
     }
-
-    
-    //
-    //
-    // int count = 0;
-    // for (int i = 0; i < _bandSize; i++) {
-    //   float avg = 0;
-    //   int sampleCount = (int)Mathf.Pow(2, i) * 2;
-    //   for (int j = 0; j < sampleCount; j++) {
-    //     avg += _samples[count] * (count + 1);
-    //     count++;
-    //   }
-    //
-    //   avg /= count;
-    //
-    //   _freqBands[i] = avg * 10;
-      // _bands[i] = _spectrumData.Skip(i * chunk).Take(chunk).Average();
-    // }
   }
 }

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Lasp;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SpinWheel : MonoBehaviour {
     private Rigidbody2D rb;
-    private float direction = 1;
+    public float direction = 1;
     private bool isShaking = false;
+    // public float spinSpeed = 0;
 
     private Vector2 shakeDir = Vector2.down;
     // private Vector2[] v = new []{Vector2.up, Vector2.down};
