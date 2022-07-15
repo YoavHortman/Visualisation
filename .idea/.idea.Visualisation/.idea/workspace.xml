@@ -2,21 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ccf75bf-d711-4e5c-85f5-49784fa129c9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/AudioSpectrum.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/AudioSpectrum.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/AudioSpectrumInspector.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/AudioSpectrumInspector.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Assets/000_0003_figure1.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Assets/000_0003_figure1.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/AudioLoudnessDetector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/AudioLoudnessDetector.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Background solid.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Background solid.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Brackys tutorial shader.shadergraph" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Brackys tutorial shader.shadergraph" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Rat wheel.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Rat wheel.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/SpinWheel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/SpinWheel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/SpriteHeightToSound.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SpriteHeightToSound.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/PackageManagerSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/PackageManagerSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,11 +24,26 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../Desktop/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../Downloads/unity-audio-spectrum-test/Assets/Scripts/ObliqueProjection.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../Downloads/unity-audio-spectrum-test/Assets/Scripts/Visualizer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/AmpScale.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/AudioLoudnessDetector.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/FlowerPartController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/SpinWheelContainer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/SpriteHeightToSound.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/SpriteOutlineFx/SpriteOutlineFx.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/CreateTileFromPaletteAttribute.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/GridBrushesDropdown.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.7.1/Tests/Runtime/Shared/051-TestGenerics.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.render-pipelines.core@13.1.8/Runtime/Debugging/DebugUpdater.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.render-pipelines.universal@13.1.8/Runtime/Passes/MainLightShadowCasterPass.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.render-pipelines.universal@13.1.8/Runtime/Passes/PostProcessPass.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.render-pipelines.universal@13.1.8/Samples~/URPPackageSamples/CameraStacking/3D Skybox/Scripts/SkyboxCamera.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshPro.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.keijiro.lasp@2.1.6/Runtime/Internal/InputDeviceList.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.keijiro.lasp@2.1.6/Runtime/SpectrumAnalyzer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/14cf6dde9d9345ccb165a8fbe1bc76c824a00/57/2d9940b3/ParticleSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2f5a85d8bd374e22a219fa145de48aeb99400/52/b81a49a0/PackageManagerProjectSettings.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/35/50eabe21/Random.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/aa/a143cf7b/Gradient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/ab/815e6e9e/Component.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/c9/dd2aebce/AddComponentMenu.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/38be1a06290b464db17b60bcabccd6a115d000/ed/80b1038f/Vector2.cs" root0="SKIP_HIGHLIGHTING" />
@@ -48,20 +56,6 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a5d47eeadba84ac6bebbe644c99bb56910000/f4/ec38f20b/AudioListener.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d303c2bf72cd4cec95665b89c457d265d2b8ef3ed6da17cd4f85587c2f9de7/System.Linq.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/AudioLoudnessDetector.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/AudioLoudnessDetector.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scenes/SampleScene.unity" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/Scripts/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/SpinWheelContainer.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Visualisation/Assets/SpriteHeightToSound.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/SpriteHeightToSound.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/SpriteOutlineFx/SpriteOutlineFx.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/CreateTileFromPaletteAttribute.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/GridBrushesDropdown.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.7.1/Tests/Runtime/Shared/051-TestGenerics.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.render-pipelines.core@13.1.8/Runtime/Debugging/DebugUpdater.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshPro.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.keijiro.lasp@2.1.6/Runtime/SpectrumAnalyzer.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -126,6 +120,8 @@
       <workItem from="1654098172370" duration="387000" />
       <workItem from="1654098746375" duration="44867000" />
       <workItem from="1655560250637" duration="447000" />
+      <workItem from="1656784955740" duration="24318000" />
+      <workItem from="1657299847652" duration="6935000" />
     </task>
     <task id="LOCAL-00001" summary="Pulled out patterns">
       <created>1654030641532</created>

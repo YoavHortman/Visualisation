@@ -33,14 +33,14 @@ public class AudioLoudnessDetector : MonoBehaviour {
     _bandBuffer = new float[_bandSize];
     _bufferDecrease = new float[_bandSize];
     _maxAudioPerBand = new float[_bandSize];
-    Array.Fill(_maxAudioPerBand, 0.3f);
+    Array.Fill(_maxAudioPerBand, 0.2f);
     audioBand = new float[_bandSize];
     audioBandBuffer = new float[_bandSize];
 
 
     _source = GetComponent<AudioSource>();
     _source.Stop();
-    _source.loop = true;
+    // _source.loop = true;
 
     string microphoneName = Microphone.devices[0];
 
@@ -74,7 +74,7 @@ public class AudioLoudnessDetector : MonoBehaviour {
       _maxAudioPerBand[i] = Mathf.Max(_maxAudioPerBand[i], _freqBands[i]);
       audioBand[i] = _freqBands[i] / _maxAudioPerBand[i];
       audioBandBuffer[i] = _bandBuffer[i] / _maxAudioPerBand[i];
-      _maxAudioPerBand[i] = Mathf.Max(0.3f,  _maxAudioPerBand[i] - _maxAudioPerBand[i] / _maxAdjustmentPercentage);
+      _maxAudioPerBand[i] = Mathf.Max(0.2f,  _maxAudioPerBand[i] - _maxAudioPerBand[i] / _maxAdjustmentPercentage);
     }
   }
 
