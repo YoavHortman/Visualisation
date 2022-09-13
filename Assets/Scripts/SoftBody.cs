@@ -15,7 +15,7 @@ public class SoftBody : MonoBehaviour {
   [SerializeField] float dampingRatio = 1;
 
   void Awake() {
-    // Utils.RecursiveSetLayer(transform, "SoftBody");
+    Utils.RecursiveSetLayer(transform, "Water");
     var allBones = GetComponent<SpriteSkin>().boneTransforms;
     var softBones = allBones.Where(bone => !bone.CompareTag("NotSoft")).ToArray();
     var massPerItem = totalMass / (softBones.Length + 1);

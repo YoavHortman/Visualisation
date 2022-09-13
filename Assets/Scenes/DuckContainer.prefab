@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6565330297017590157}
-  - component: {fileID: 3367592436669678377}
   m_Layer: 0
   m_Name: DuckContainer
   m_TagString: Untagged
@@ -33,20 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3367592436669678377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2521109856025680563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd1649afa65c45409abd54c700d6d776, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeTime: 0
-  applyInitialForceTo: {fileID: 5169946193645714577}
 --- !u!1 &5169946192376871200
 GameObject:
   m_ObjectHideFlags: 0
@@ -1004,7 +989,7 @@ GameObject:
   - component: {fileID: 5169946193655373899}
   - component: {fileID: 5169946193655373940}
   - component: {fileID: 5169946193655373897}
-  - component: {fileID: 771615752221947063}
+  - component: {fileID: 8099980098700871022}
   m_Layer: 0
   m_Name: duck
   m_TagString: Untagged
@@ -1021,7 +1006,7 @@ Transform:
   m_GameObject: {fileID: 5169946193655373941}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
+  m_LocalScale: {x: 0.17, y: 0.17, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5169946193876284637}
@@ -1113,12 +1098,12 @@ MonoBehaviour:
   - {fileID: 5169946193029742404}
   - {fileID: 5169946192451393309}
   m_Bounds:
-    m_Center: {x: -0.12767982, y: 0.78398705, z: 0}
-    m_Extent: {x: 20.713612, y: 18.30395, z: 0}
+    m_Center: {x: -0.12768555, y: 0.78398895, z: 0}
+    m_Extent: {x: 20.713614, y: 18.303951, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
---- !u!114 &771615752221947063
+--- !u!114 &8099980098700871022
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1131,7 +1116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {fileID: 5169946193645714577}
-  totalMass: 0.5
+  totalMass: 1
   frequency: 10
   dampingRatio: 10
 --- !u!1 &5169946193705830026
