@@ -214,9 +214,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4a925cc910ee1ba4ab0161a014d673f2, type: 3}
   - {fileID: 21300000, guid: 10b0c1facefb20d46a74559e77a3f827, type: 3}
   - {fileID: 21300000, guid: 346535ad8e1eb7443ae5b758fb68c75d, type: 3}
+  - {fileID: 21300000, guid: 640d5471958bc44d1a547610c7c1b4a6, type: 3}
+  - {fileID: 21300000, guid: f7cee6beed9be4d349d124dc023aeb10, type: 3}
+  - {fileID: 21300000, guid: 6e3b5552e1d4f412b9a4e0ce9dfdf14f, type: 3}
   rotationSpeed: 20
   movementSpeed: {x: -2, y: -2}
   orderInLayer: 0
+  maxRangeSize: 30
   Combos:
   - childrens:
     - {fileID: 21300000, guid: 10b0c1facefb20d46a74559e77a3f827, type: 3}
@@ -278,7 +282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 435069908003225386, guid: fe23cfaef716367429c292f9273ed391, type: 3}
       propertyPath: orthographic size
-      value: 2.5554435
+      value: 3.785558
       objectReference: {fileID: 0}
     - target: {fileID: 435069908003225557, guid: fe23cfaef716367429c292f9273ed391, type: 3}
       propertyPath: m_RootOrder
@@ -349,15 +353,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 5.110887
+      value: 7.571116
       objectReference: {fileID: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0025213007
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0025202255
+      value: -0.0027351698
       objectReference: {fileID: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_LocalPosition.z

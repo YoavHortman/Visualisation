@@ -41,7 +41,10 @@ class MainMenuBackground : MonoBehaviour {
   [SerializeField] protected float rotationSpeed = 20;
   [SerializeField] protected Vector2 movementSpeed = new(-2, -2);
   [SerializeField] protected int orderInLayer = 0;
-
+  [SerializeField] private float maxRangeSize = 30;
+  [SerializeField] private float maxMovementSpeed = 2.2f;
+  [SerializeField] private float maxRotationSpeed = 60f;
+  
   private Sizes _sizes = new(5, 0.5f);
   private SpriteWithMetadata[] _spritesWithMetaData;
   private Instance[] _instances;
@@ -53,6 +56,7 @@ class MainMenuBackground : MonoBehaviour {
   private Quaternion _currentRotation;
   private Color _color = new(1, 1, 1, 1);
   private Color _targetColor = new(1, 1, 1, 1);
+  
   private float _rangeStart = 0;
   private float _rangeEnd = 10;
   private Grid _grid;
@@ -135,15 +139,15 @@ class MainMenuBackground : MonoBehaviour {
 
   [EditorButton]
   void UpdateSpeedAndRotation() {
-    rotationSpeed = Random.Range(-50f, 50f);
-    movementSpeed = new Vector2(Random.Range(-2f, 2f), Random.Range(-2f, 2f));
+    rotationSpeed = Random.Range(-maxRotationSpeed, maxRotationSpeed);
+    movementSpeed = new Vector2(Random.Range(-maxMovementSpeed, maxMovementSpeed), Random.Range(-maxMovementSpeed, maxMovementSpeed));
     Invoke(nameof(UpdateSpeedAndRotation), getRandomInRange());
   }
 
 
   void UpdateRange() {
-    _rangeStart = Random.Range(0f, 20f);
-    _rangeEnd = Random.Range(_rangeStart, 21f);
+    _rangeStart = Random.Range(0f, maxRangeSize);
+    _rangeEnd = Random.Range(_rangeStart, maxRangeSize + 1f);
     Invoke(nameof(UpdateRange), 90);
   }
 

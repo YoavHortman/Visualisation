@@ -12,7 +12,7 @@ public class Snakes : BasePattern {
     var rowCol = new Vector2Int(1, 1);
     var sizes = new Sizes(0, 0);
     while (rowCol.x % 2 != 0 || rowCol.y % 2 != 0) {
-      sizes.spriteSize = Random.Range(0.3f, 2f);
+      sizes.spriteSize = Random.Range(0.3f, 5f);
       sizes.borderPadding = sizes.spriteSize / 2;
       rowCol = GetNextColAndRow(ResizeListener.screenSizeInWorldCoords, sizes.Sum());
     }
