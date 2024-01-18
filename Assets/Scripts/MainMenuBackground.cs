@@ -45,6 +45,10 @@ class MainMenuBackground : MonoBehaviour {
   [SerializeField] private float maxMovementSpeed = 2.2f;
   [SerializeField] private float maxRotationSpeed = 60f;
   
+  // Accessed by One.cs
+  public Material[] materials;
+  public Material defaultMaterial;
+  
   private Sizes _sizes = new(5, 0.5f);
   private SpriteWithMetadata[] _spritesWithMetaData;
   private Instance[] _instances;
@@ -118,22 +122,11 @@ class MainMenuBackground : MonoBehaviour {
   [EditorButton]
   void UpdateSizeEditor() {
     SetPattern();
-    _sizes = pattern.GetSizes();
-
-    UpdateGrid();
-    InitSpritesWithMetaData();
-
-    pattern.AfterSizeUpdate(_instances, _colRow, _grid);
   }
 
-  void UpdateSize() {
+  void UpdateSize()
+  {
     SetPattern();
-    _sizes = pattern.GetSizes();
-
-    UpdateGrid();
-    InitSpritesWithMetaData();
-
-    pattern.AfterSizeUpdate(_instances, _colRow, _grid);
     Invoke(nameof(UpdateSize), getRandomInRange());
   }
 
@@ -191,7 +184,14 @@ class MainMenuBackground : MonoBehaviour {
   }
 
   void SetPattern() {
+    pattern.OnBeforeChange(_instances, _grid, _colRow, movementSpeed, defaultMaterial);
     pattern = PatternUtils.GetRandomPattern();
+    pattern.OnStart(_instances, materials);
+    _sizes = pattern.GetSizes();
+    UpdateGrid();
+    InitSpritesWithMetaData();
+
+    pattern.AfterSizeUpdate(_instances, _colRow, _grid);
   }
 
   void ChangeColor() {

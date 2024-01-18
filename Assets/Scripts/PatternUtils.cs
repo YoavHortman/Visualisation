@@ -68,7 +68,8 @@ public static class PatternUtils
         { "fold", new Fold() },
         { "lines", new Lines() },
         { "circleShake", new CircleShake() },
-        { "forceFromPoint", new ForceFromPoint() }
+        { "forceFromPoint", new ForceFromPoint() },
+        { "one", new One() }
     };
 
     public static void SetRandomTargetsInRadius(Instance[] instances, float radius)

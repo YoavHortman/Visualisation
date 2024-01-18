@@ -36,10 +36,9 @@ public class ForceFromPoint : BasePattern
         return new Vector2Int(nextColCount, nextRowCount);
     }
 
-    public override void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index,
-        float fullSize, Grid grid,
-        Vector2Int colRow, Vector2 movementSpeed)
+    public override void OnBeforeChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed, Material defaultMaterial)
     {
+        base.OnBeforeChange(instances, grid, colRow, movementSpeed,defaultMaterial);
         _step = 0;
     }
 

@@ -17,10 +17,6 @@
       return GetColsAndRowsWithBuffer(screenSizeInWorldCoords, fullSize);
     }
 
-    public override void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
-      Vector2Int colRow, Vector2 movementSpeed) {
-    }
-
     public override bool IsReadyForPatternChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
       return true;
     }

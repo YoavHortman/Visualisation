@@ -25,12 +25,7 @@ public class Snakes : BasePattern {
   public override Vector2Int GetNextColAndRow(Vector2 screenSizeInWorldCoords, float fullSize) {
     return GetColsAndRowsWithBuffer(screenSizeInWorldCoords, fullSize);
   }
-
-  public override void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid,
-    Vector2Int colRow, Vector2 movementSpeed) {
-    instance.targetPos = grid.GetCellCenterWorld(grid.WorldToCell(t.position));
-    t.position = Vector3.MoveTowards(t.position, instance.targetPos, Time.deltaTime * movementSpeed.magnitude);
-  }
+  
 
   public override bool IsReadyForPatternChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
     foreach (var instance in instances) {

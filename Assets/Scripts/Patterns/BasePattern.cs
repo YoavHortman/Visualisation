@@ -2,13 +2,16 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class BasePattern {
+public abstract class BasePattern
+{
+
+  public virtual  void OnStart(Instance[] instances, Material[] materials) { }
   public abstract bool GetShouldHandleInstanceBounds();
   public abstract void AfterUpdate(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
   public abstract Sizes GetSizes();
   public abstract void AfterSizeUpdate(Instance[] instances, Vector2Int colRow, Grid grid);
   public abstract Vector2Int GetNextColAndRow(Vector2 screenSizeInWorldCoords, float fullSize);
-  public abstract void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
+  public virtual void OnBeforeChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed, Material defaultMaterial) {}
   public abstract bool IsReadyForPatternChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
   public abstract void Update(Transform t, Instance instance, int curCol, int curRow, int index, float fullSize, Grid grid, Vector2Int colRow, Vector2 movementSpeed);
 

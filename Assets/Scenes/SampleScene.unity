@@ -221,6 +221,11 @@ MonoBehaviour:
   movementSpeed: {x: -2, y: -2}
   orderInLayer: 0
   maxRangeSize: 30
+  maxMovementSpeed: 2.2
+  maxRotationSpeed: 60
+  materials:
+  - {fileID: 2100000, guid: 6284c0c8ea1954f71b10ad0fd0e369d1, type: 2}
+  defaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Combos:
   - childrens:
     - {fileID: 21300000, guid: 10b0c1facefb20d46a74559e77a3f827, type: 3}
@@ -282,7 +287,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 435069908003225386, guid: fe23cfaef716367429c292f9273ed391, type: 3}
       propertyPath: orthographic size
-      value: 3.785558
+      value: 2.747106
       objectReference: {fileID: 0}
     - target: {fileID: 435069908003225557, guid: fe23cfaef716367429c292f9273ed391, type: 3}
       propertyPath: m_RootOrder
@@ -343,6 +348,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Background solid
       objectReference: {fileID: 0}
+    - target: {fileID: 7844340554552638958, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -353,7 +362,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 7.571116
+      value: 5.494212
       objectReference: {fileID: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -361,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0027351698
+      value: -0.0022262128
       objectReference: {fileID: 0}
     - target: {fileID: 7844340554552638959, guid: fc399710955a6e348a9a47373cfd1de3, type: 3}
       propertyPath: m_LocalPosition.z

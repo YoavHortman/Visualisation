@@ -18,14 +18,7 @@ public class CircleShake : BasePattern {
   public override Vector2Int GetNextColAndRow(Vector2 screenSizeInWorldCoords, float fullSize) {
     return GetColsAndRows(screenSizeInWorldCoords, fullSize);
   }
-
-  public override void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index,
-    float fullSize, Grid grid,
-    Vector2Int colRow, Vector2 movementSpeed) {
-    instance.targetPos = grid.GetCellCenterWorld(new Vector3Int(curCol, curRow, 0));
-    t.position = Vector2.MoveTowards(t.position, instance.targetPos, Mathf.Abs(Time.deltaTime * movementSpeed.y));
-  }
-
+  
   public override bool IsReadyForPatternChange(Instance[] instances, Grid grid, Vector2Int colRow,
     Vector2 movementSpeed) {
     foreach (var instance in instances) {

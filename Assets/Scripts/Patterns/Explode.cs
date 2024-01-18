@@ -37,12 +37,6 @@ public class Explode : BasePattern {
     return GetColsAndRows(screenSizeInWorldCoords, fullSize);
   }
 
-  public override void PrePatternChange(Transform t, Instance instance, int curCol, int curRow, int index,
-    float fullSize, Grid grid,
-    Vector2Int colRow, Vector2 movementSpeed) {
-    Update(t, instance, curCol, curRow, index, fullSize, grid, colRow, movementSpeed);
-  }
-
   public override bool IsReadyForPatternChange(Instance[] instances, Grid grid, Vector2Int colRow, Vector2 movementSpeed) {
     if (_explosionStarting) {
       foreach (var instance in instances) {
