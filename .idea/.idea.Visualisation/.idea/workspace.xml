@@ -4,39 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4ccf75bf-d711-4e5c-85f5-49784fa129c9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/One.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/One.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="4ccf75bf-d711-4e5c-85f5-49784fa129c9" name="Changes" comment="Wavy shader">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Visualisation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/Outline.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/Outline.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/OutlineExample.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/OutlineExample.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/OutlineShader.shadergraph" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/OutlineShader.shadergraph.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/SubOutline.shadersubgraph" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Ourlinw/SubOutline.shadersubgraph.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MainMenuBackground.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PatternUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PatternUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/BasePattern.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/BasePattern.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Circle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Circle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/CircleShake.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/CircleShake.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Circles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Circles.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Default.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Default.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Diagonal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Diagonal.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Explode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Explode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Fold.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Fold.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/ForceFromPoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/ForceFromPoint.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Lines.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Lines.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Scatter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Scatter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Shake.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Shake.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Snakes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Snakes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Spiral.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Spiral.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Steps.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Steps.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Patterns/Zigzag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Patterns/Zigzag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,10 +24,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Users/yoavhortman/Desktop/Unity project/Visualisation/Assets/Scenes/SampleScene.unity" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Desktop/Unity project/Visualisation/Assets/Scripts/MainMenuBackground.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Desktop/Unity project/Visualisation/Assets/Scripts/Patterns/Snakes.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/yoavhortman/Desktop/Unity project/Visualisation/Assets/Scripts/Patterns/Steps.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/yoavhortman/Desktop/Unity project/Visualisation/Assets/Scripts/Patterns/BasePattern.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/GridBrushesDropdown.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -152,7 +121,8 @@
       <workItem from="1704729540443" duration="681000" />
       <workItem from="1704905827067" duration="1157000" />
       <workItem from="1705334666214" duration="1272000" />
-      <workItem from="1705580934248" duration="11559000" />
+      <workItem from="1705580934248" duration="12741000" />
+      <workItem from="1705661731284" duration="59000" />
     </task>
     <task id="LOCAL-00001" summary="Pulled out patterns">
       <created>1654030641532</created>
@@ -191,7 +161,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705334702188</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Wavy shader">
+      <option name="closed" value="true" />
+      <created>1705617471556</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1705617471556</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,6 +196,7 @@
     <MESSAGE value="more patterns" />
     <MESSAGE value="add new images" />
     <MESSAGE value="Make sizes bigger on avg" />
-    <option name="LAST_COMMIT_MESSAGE" value="Make sizes bigger on avg" />
+    <MESSAGE value="Wavy shader" />
+    <option name="LAST_COMMIT_MESSAGE" value="Wavy shader" />
   </component>
 </project>
